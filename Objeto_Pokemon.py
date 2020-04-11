@@ -1,38 +1,21 @@
-import arcade
-import ramdon
+
 class Pokemon:
-    def __init__(self,nombre,tipo,nivel,base_HP,base_stats,fijo):
+    def __init__(self,nombre,tipo,nivel,exp_final,HP_MAX,ataque,defensa):
+        #Constructor
         # String
         self.nombre = nombre
         self.tipo = tipo
         #Puntos de experiencia INT
         self.nivel = nivel
         self.contador_exp = 0
-        self.exp_final = base_HP + nivel*fijo
+        self.exp_final = exp_final
         #Puntos de vida INT
-        self.HP_MAX = base_HP + nivel*fijo
-        self.HP = self.HP_MAX
+        self.HP_MAX = HP_MAX
+        self.HP = HP_MAX
         #Estadisticas daño y defensa INT
-        self.ataque = base_stats + nivel*fijo
-        self.defensa = base_stats + nivel*fijo
-    #Definimos una serie de sets de las principales estadisticas de nuestra clase pokemon
-    def set_exp_final(self,nivel):
-        self.exp_final =  base_HP + nivel*fijo
+        self.ataque = ataque
+        self.defensa = defensa
 
-    def set_HP_MAX(self,nivel):
-        self.HP_MAX = base_HP + nivel*fijo
-    def sumar_HP_MAX(self,cantidad):
-        self.HP_MAX +=cantidad
-
-    def set_ataque(self,nivel):
-        self.ataque = base_stats + nivel*fijo
-    def sumar_ataque(self,cantidad):
-        self.ataque += cantidad
-
-    def set_defensa(self,nivel):
-        self.defensa = base_stats + nivel*fijo
-    def sumar_defensa(self,cantidad):
-        self.defensa += cantidad
     # Definimos las funciones principales relacionado con HP
     def sumar_HP(self,cantidad):
         self.HP +=cantidad
@@ -45,10 +28,22 @@ class Pokemon:
 
     def subir_nivel(self):
         self.nivel +=1
-        self.contador_exp = 0;
-        set_exp_final(self.nivel)
-        set_HP_MAX(self.nivel)
-        sumar_HP(self.HP_MAX)
-        set_ataque(self.nivel)
-        set_defensa(self.nivel)
-        return "Has subido de nivel"
+        self.contador_exp = 0
+        #Planteamiento principal de subida de estadisticas(1-10)
+        if(self.nivel<=10):
+            self.HP_MAX *= 1.205
+            self.ataque *= 1.23
+            self.defensa *= 1.27
+            self.sumar_HP(9999999)
+            return self.nombre + "ha subido de nivel."
+        #A partir de lvl 10 la suma de estadisticas es distintas(10-40)
+        elif(10<self.nivel<=40):
+            self.ataque += 3
+            self.HP_MAX += 5
+            self.defensa +=2
+            self.sumar_HP(9999999)
+            return self.nombre + "ha subido de nivel."
+        else:
+            self.sumar_HP(9999999)
+            return self.nombre + " ha llegado al nivel máximo."
+

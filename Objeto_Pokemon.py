@@ -1,6 +1,6 @@
 
 class Pokemon:
-    def __init__(self,nombre,tipo,nivel,exp_final,HP_MAX,ataque,defensa):
+    def __init__(self,nombre,tipo,nivel,exp_final,HP_MAX,ataque,defensa,lista_ataques):
         #Constructor
         # String
         self.nombre = nombre
@@ -15,6 +15,8 @@ class Pokemon:
         #Estadisticas daño y defensa INT
         self.ataque = ataque
         self.defensa = defensa
+        #Tipo lista de objetos con 4 ataques como máximo
+        self.lista_ataques=[lista_ataques]
 
     # Definimos las funciones principales relacionado con HP
     def sumar_HP(self,cantidad):
@@ -35,15 +37,15 @@ class Pokemon:
             self.ataque *= 1.23
             self.defensa *= 1.27
             self.sumar_HP(9999999)
-            return self.nombre + "ha subido de nivel."
+            # Falta cuadro de texto indicando que pokemon ha subido de nivel
         #A partir de lvl 10 la suma de estadisticas es distintas(10-40)
         elif(10<self.nivel<=40):
             self.ataque += 3
             self.HP_MAX += 5
             self.defensa +=2
             self.sumar_HP(9999999)
-            return self.nombre + "ha subido de nivel."
+            #Falta cuadro de texto indicando que pokemon ha subido de nivel
         else:
             self.sumar_HP(9999999)
-            return self.nombre + " ha llegado al nivel máximo."
+            # Falta cuadro de texto indicando que pokemon ha subido de nivel máximo
 

@@ -6,8 +6,7 @@ class Ataque():
         self.nombre = nombre
         self.daño = daño
 
-    def atacar(self,hp_enemigo, def_enemigo, tipo_enemigo,tipo_aliado):   # agua > fuego > planta > agua
-
+    def atacar(self,hp_enemigo, def_enemigo, tipo_enemigo,tipo_aliado):
         hp_total = hp_enemigo + def_enemigo
 
         if tipo_aliado == "agua":
@@ -39,10 +38,3 @@ class Ataque():
 
         print ("Nombre: ", self.nombre, "\n Daño: ", self.daño, "\n Tipo: ", self.tipo)
 
-def main():
-
-    ataque1 = Ataque ("nombre1", 10, "fuego")
-    ataque1.imprimir_datos()
-    print (ataque1.atacar(100,10, "agua"))
-
-main()

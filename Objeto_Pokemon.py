@@ -1,6 +1,6 @@
 
 class Pokemon:
-    def __init__(self,nombre,tipo,nivel,exp_final,HP_MAX,ataque,defensa,lista_ataques):
+    def __init__(self,nombre,tipo,nivel,exp_final,HP_MAX,ataque,defensa):
         #Constructor
         # String
         self.nombre = nombre
@@ -16,7 +16,7 @@ class Pokemon:
         self.ataque = ataque
         self.defensa = defensa
         #Tipo lista de objetos con 4 ataques como máximo
-        self.lista_ataques=[lista_ataques]
+
 
     # Definimos las funciones principales relacionado con HP
     def sumar_HP(self,cantidad):

@@ -1,94 +1,22 @@
 import arcade
+import os
+import Objeto_Entrenador
+import Objeto_Pokemon
+import resources
 
 WIDTH = 800
 HEIGHT = 600
-SPRITE_SCALING = 0.5
+SPRITE_SCALING = 0.6
 SPRITE_NATIVE_SIZE = 128
 SPRITE_SIZE = int(SPRITE_NATIVE_SIZE * SPRITE_SCALING)
 
+VIEWPORT_MARGIN_TOP = 60
+VIEWPORT_MARGIN_BOTTOM = 60
+VIEWPORT_RIGHT_MARGIN = 270
+VIEWPORT_LEFT_MARGIN = 270
 
 MOVEMENT_SPEED = 5
 
-class MenuView(arcade.View):
-    def on_show(self):
-        arcade.set_background_color(arcade.color.WHITE)
-
-    def on_draw(self):
-        arcade.start_render()
-        arcade.draw_text("Titulo Juego", WIDTH/2, HEIGHT/2, arcade.color.RED, font_size=50, anchor_x="center")
-        arcade.draw_text("Haz click para avanzar", WIDTH/2, HEIGHT/2-75, arcade.color.RED, font_size=20, anchor_x="center")
-
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        instructions_view = InstructionView()
-        self.window.show_view(instructions_view)
-
-class InstructionView(arcade.View):
-    def on_show(self):
-        arcade.set_background_color(arcade.color.ORANGE)
-
-    def on_draw(self):
-        arcade.start_render()
-        arcade.draw_text("Opciones", WIDTH / 2, HEIGHT / 2, arcade.color.RED, font_size=50, anchor_x="center")
-        arcade.draw_text("Dentro del juego, pulsa F para pantalla completa", WIDTH / 2, HEIGHT / 2- 75, arcade.color.RED, font_size=20, anchor_x="center")
-        arcade.draw_text("Click para iniciar el juego", WIDTH / 2, HEIGHT / 2 - 100,
-                         arcade.color.RED, font_size=15, anchor_x="center")
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        instructions_view = HistoriaView()
-        self.window.show_view(instructions_view)
-
-
-class HistoriaView(arcade.View):
-    def on_show(self):
-        arcade.set_background_color(arcade.color.BLACK)
-
-    def on_draw(self):
-        arcade.start_render()
-        arcade.draw_text("Insertar Historia Aqui", WIDTH / 2, HEIGHT / 2, arcade.color.RED, font_size=50, anchor_x="center")
-
-
-    def on_mouse_press(self, _x, _y, _button, _modifiers):
-        ##Mostrar el juego
-        arcade.close_window()
-        MyGame()
-        arcade.run()
-
-
-class Room:
-    """
-    This class holds all the information about the
-    different rooms.
-    """
-    def __init__(self):
-        # You may want many lists. Lists for coins, monsters, etc.
-        self.wall_list = None
-
-        # This holds the background images. If you don't want changing
-        # background images, you can delete this part.
-        self.background = None
-def setup_pueblo():
-    room=Room()
-
-    room.wall_list = arcade.SpriteList()
-    for y in (0, HEIGHT - SPRITE_SIZE):
-        # Loop for each box going across
-        for x in range(0, WIDTH, SPRITE_SIZE):
-            wall = arcade.Sprite("Sprites/Habitaciones/Muro_Invisible.png", SPRITE_SCALING)
-            wall.left = x
-            wall.bottom = y
-            room.wall_list.append(wall)
-
-    # Create left and right column of boxes
-    for x in (0, WIDTH - SPRITE_SIZE):
-        # Loop for each box going across
-        for y in range(SPRITE_SIZE, HEIGHT - SPRITE_SIZE, SPRITE_SIZE):
-            # Skip making a block 4 and 5 blocks up on the right side
-            if (y != SPRITE_SIZE * 4 and y != SPRITE_SIZE * 5) or x == 0:
-                wall = arcade.Sprite("Sprites/Habitaciones/Muro_Invisible.png", SPRITE_SCALING)
-                wall.left = x
-                wall.bottom = y
-                room.wall_list.append(wall)
-
-    room.background= arcade.load_texture("Sprites/Habitaciones/Pueblo.jpg")
 
 
 
@@ -100,44 +28,58 @@ class MyGame(arcade.Window):
         """
         super().__init__(WIDTH, HEIGHT, "Juego", fullscreen=True)
 
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        os.chdir(file_path)
+
         width, height = self.get_size()
+
         self.set_viewport(0, width, 0, height)
 
         self.current_room = 0
 
-        self.rooms = None
+        self.wall_list = None
         self.player_sprite = None
         self.player_list = None
+
+        self.view_left = 0
+        self.view_bottom = 0
         self.physics_engine = None
 
+        self.current_room = 0
+
+        # Variables globales para las teclas
+        self.tienda = False
+        self.cambio = False
+        self.combate = False
+        arcade.set_background_color(arcade.color.WHITE)
     def setup(self):
         """ Set up the game and initialize the variables. """
         # Set up the player
-        self.player_sprite = arcade.Sprite("Sprites/Jugador/Jugador.jpg", SPRITE_SCALING)
+        self.player_sprite = arcade.Sprite("resources/sprites/player/Player.png.png", SPRITE_SCALING)
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 100
         self.player_list = arcade.SpriteList()
         self.player_list.append(self.player_sprite)
 
-        # Listado de habitaciones
-        self.rooms = []
-        self.rooms.append(setup_pueblo())
+        self.jugador = Objeto_Entrenador.Entrenador("jugador")
 
-        #Contador de habitación
-        self.current_room = 0
+        # Contador de habitación
 
-        #Fisicas
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
+        self.load_habitacion(self.current_room)
 
+    def load_habitacion(self, current_room):
+        mapa = arcade.tilemap.read_tmx(f"resources/maps/nivel{current_room}.tmx")
+        self.wall_list = arcade.tilemap.process_layer(mapa, "Nivel", 0.5)
+        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
+
+        if mapa.background_color:
+            arcade.set_background_color(mapa.background_color)
 
     def on_draw(self):
 
         arcade.start_render()
-        arcade.draw_lrwh_rectangle_textured(0, 0,WIDTH,HEIGHT,self.rooms[self.current_room].background)
-        self.rooms[self.current_room].wall_list.draw()
+        self.wall_list.draw()
         self.player_list.draw()
-
-
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
@@ -150,11 +92,42 @@ class MyGame(arcade.Window):
             self.player_sprite.change_x = MOVEMENT_SPEED
 
         if key == arcade.key.F:
-
             self.set_fullscreen(not self.fullscreen)
 
             width, height = self.get_size()
             self.set_viewport(0, width, 0, height)
+        if (self.combate == True):
+            if key == arcade.key.KEY_1:      pass
+            if key == arcade.key.KEY_2:      pass
+            if key == arcade.key.KEY_3:
+                self.cambio = True
+            if key == arcade.key.KEY_4:      pass
+
+        if (self.combate == True and self.cambio == True):
+            if key == arcade.key.KEY_1:      pass
+            if key == arcade.key.KEY_2:      pass
+            if key == arcade.key.KEY_3:      pass
+            if key == arcade.key.KEY_4:      pass
+            if key == arcade.key.KEY_5:      pass
+            if key == arcade.key.KEY_6:      pass
+
+        if (self.tienda == True):
+            if key == arcade.key.KEY_1:
+                self.jugador.restar_dinero()
+                self.jugador.inventairo["Poción"] += 1
+            if key == arcade.key.KEY_2:
+                self.jugador.restar_dinero()
+                self.jugador.inventairo["Super Poción"] += 1
+            if key == arcade.key.KEY_3:
+                self.jugador.restar_dinero()
+                self.jugador.inventairo["Mega Poción"] += 1
+            if key == arcade.key.KEY_4:
+                self.jugador.restar_dinero()
+                self.jugador.inventairo["Cuerda huida"] += 1
+
+        if key == arcade.key.Q and self.jugador.inventairo["Cuerda huida"] != 0 and self.current_room != 0:
+            self.jugador.inventairo["Cuerda huida"] -= 1
+            self.current_room = 0
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.W or key == arcade.key.S:
@@ -163,31 +136,46 @@ class MyGame(arcade.Window):
         elif key == arcade.key.A or key == arcade.key.D:
             self.player_sprite.change_x = 0
 
-
     def on_update(self, delta_time):
         # Call update on all sprites (The sprites don't do much in this example though.)
         self.physics_engine.update()
+        # Scroll left
+        left_bndry = self.view_left + VIEWPORT_LEFT_MARGIN
+        if self.player_sprite.left < left_bndry:
+            self.view_left -= left_bndry - self.player_sprite.left
+            changed = True
 
-        # Do some logic here to figure out what room we are in, and if we need to go
-        # to a different room.
-        if self.player_sprite.center_x > WIDTH and self.current_room == 0:
-            self.current_room = 1
-            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,self.rooms[self.current_room].wall_list)
+        # Scroll right
+        right_bndry = self.view_left + WIDTH - VIEWPORT_RIGHT_MARGIN
+        if self.player_sprite.right > right_bndry:
+            self.view_left += self.player_sprite.right - right_bndry
+            changed = True
 
-            self.player_sprite.center_x = 0
-        elif self.player_sprite.center_x < 0 and self.current_room == 1:
-            self.current_room = 0
-            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = WIDTH
+        # Scroll up
+        top_bndry = self.view_bottom + HEIGHT - VIEWPORT_MARGIN_TOP
+        if self.player_sprite.top > top_bndry:
+            self.view_bottom += self.player_sprite.top - top_bndry
+            changed = True
+
+        # Scroll down
+        bottom_bndry = self.view_bottom + VIEWPORT_MARGIN_BOTTOM
+        if self.player_sprite.bottom < bottom_bndry:
+            self.view_bottom -= bottom_bndry - self.player_sprite.bottom
+            changed = True
+
+        # If we need to scroll, go ahead and do it.
+        if changed:
+            self.view_left = int(self.view_left)
+            self.view_bottom = int(self.view_bottom)
+            arcade.set_viewport(self.view_left,
+                                WIDTH + self.view_left,
+                                self.view_bottom,
+                                HEIGHT + self.view_bottom)
 
 
 def main():
-    window = arcade.Window(WIDTH, HEIGHT, "Juego")
-    window.total_score = 0
-    menu_view = MenuView()
-    window.show_view(menu_view)
+    window = MyGame()
+    window.setup()
     arcade.run()
-
-
 
 main()

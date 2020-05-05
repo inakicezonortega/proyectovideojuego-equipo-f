@@ -1,6 +1,7 @@
 #La definicion de estos objetos esta predefinido en el propio main , su objetivo es que en el pueblo en un espacio asignado aparezca unos cuadros de texto
 #para la tienda. En estos cuadros al pulsarse las teclas se llamará a los datos del jugador y al objeto que le corresponda la tecla y hara la transacción pertinente
-
+import Objeto_Entrenador
+jugador = Objeto_Entrenador()
 
 class Item():
     def __init__(self,nombre,descripcion,precio):

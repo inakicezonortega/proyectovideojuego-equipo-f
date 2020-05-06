@@ -15,7 +15,7 @@ VIEWPORT_MARGIN_BOTTOM = 60
 VIEWPORT_RIGHT_MARGIN = 270
 VIEWPORT_LEFT_MARGIN = 270
 
-MOVEMENT_SPEED = 5
+MOVEMENT_SPEED = 3
 
 class Room:
     """
@@ -42,11 +42,13 @@ def setup_room_1():
 
     map = arcade.tilemap.read_tmx("resources/maps/nivel0.tmx")
 
-    textura = arcade.process_layer(map,"Nivel",0.5)
-    wall = arcade.process_layer(map,"Muros Invisibles",0.5)
+    carga = arcade.process_layer(map,"Nivel",1)
+    wall = arcade.process_layer(map,"Muros Invisibles",1)
 
-    room.textura = textura
+
+    room.textura = carga
     room.wall_list = wall
+
 
     return room
 
@@ -91,10 +93,12 @@ class MyGame(arcade.Window):
     def setup(self):
         """ Set up the game and initialize the variables. """
         # Set up the player
-        self.player_sprite = arcade.Sprite("resources/sprites/player/Player.png", SPRITE_SCALING)
-        self.player_sprite.center_x = 0
-        self.player_sprite.center_y = 0
         self.player_list = arcade.SpriteList()
+        self.player_sprite = arcade.Sprite("resources/sprites/player/personaje sin traje.png", SPRITE_SCALING)
+        #Posición de inicio del jugador
+        self.player_sprite.center_x = 300
+        self.player_sprite.center_y = 400
+
         self.player_list.append(self.player_sprite)
 
 
@@ -111,8 +115,9 @@ class MyGame(arcade.Window):
     def on_draw(self):
 
         arcade.start_render()
-        self.rooms[self.current_room].wall_list.draw()
+
         self.rooms[self.current_room].textura.draw()
+        self.rooms[self.current_room].wall_list.draw()
         self.player_list.draw()
 
     def on_key_press(self, key, modifiers):

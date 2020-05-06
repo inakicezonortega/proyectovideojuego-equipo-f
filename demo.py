@@ -2,7 +2,7 @@ import arcade
 import os
 import Objeto_Entrenador
 import Objeto_Pokemon
-import resources
+
 
 WIDTH = 800
 HEIGHT = 600
@@ -16,6 +16,39 @@ VIEWPORT_RIGHT_MARGIN = 270
 VIEWPORT_LEFT_MARGIN = 270
 
 MOVEMENT_SPEED = 5
+
+class Room:
+    """
+    This class holds all the information about the
+    different rooms.
+    """
+    def __init__(self):
+        self.wall_list = None
+        self.textura = None
+
+
+def setup_room_1():
+    """
+    Create and return room 1.
+    If your program gets large, you may want to separate this into different
+    files.
+    """
+    room = Room()
+
+    """ Set up the game and initialize the variables. """
+    # Sprite lists
+    room.wall_list = arcade.SpriteList()
+    room.textura = arcade.SpriteList()
+
+    map = arcade.tilemap.read_tmx("resources/maps/nivel0.tmx")
+
+    textura = arcade.process_layer(map,"Nivel",0.5)
+    wall = arcade.process_layer(map,"Muros Invisibles",0.5)
+
+    room.textura = textura
+    room.wall_list = wall
+
+    return room
 
 
 
@@ -36,7 +69,9 @@ class MyGame(arcade.Window):
         self.set_viewport(0, width, 0, height)
 
         self.current_room = 0
+        self.rooms = None
 
+        self.textura = None
         self.wall_list = None
         self.player_sprite = None
         self.player_list = None
@@ -45,40 +80,39 @@ class MyGame(arcade.Window):
         self.view_bottom = 0
         self.physics_engine = None
 
-        self.current_room = 0
 
         # Variables globales para las teclas
         self.tienda = False
         self.cambio = False
         self.combate = False
-        arcade.set_background_color(arcade.color.WHITE)
+
+
+
     def setup(self):
         """ Set up the game and initialize the variables. """
         # Set up the player
-        self.player_sprite = arcade.Sprite("resources/sprites/player/Player.png.png", SPRITE_SCALING)
-        self.player_sprite.center_x = 100
-        self.player_sprite.center_y = 100
+        self.player_sprite = arcade.Sprite("resources/sprites/player/Player.png", SPRITE_SCALING)
+        self.player_sprite.center_x = 0
+        self.player_sprite.center_y = 0
         self.player_list = arcade.SpriteList()
         self.player_list.append(self.player_sprite)
 
+
+        self.current_room = 0
+        self.rooms = []
+
+        room = setup_room_1()
+        self.rooms.append(room)
+        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
+
         self.jugador = Objeto_Entrenador.Entrenador("jugador")
 
-        # Contador de habitación
-
-        self.load_habitacion(self.current_room)
-
-    def load_habitacion(self, current_room):
-        mapa = arcade.tilemap.read_tmx(f"resources/maps/nivel{current_room}.tmx")
-        self.wall_list = arcade.tilemap.process_layer(mapa, "Nivel", 0.5)
-        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
-
-        if mapa.background_color:
-            arcade.set_background_color(mapa.background_color)
 
     def on_draw(self):
 
         arcade.start_render()
-        self.wall_list.draw()
+        self.rooms[self.current_room].wall_list.draw()
+        self.rooms[self.current_room].textura.draw()
         self.player_list.draw()
 
     def on_key_press(self, key, modifiers):
@@ -139,6 +173,7 @@ class MyGame(arcade.Window):
     def on_update(self, delta_time):
         # Call update on all sprites (The sprites don't do much in this example though.)
         self.physics_engine.update()
+        changed = False
         # Scroll left
         left_bndry = self.view_left + VIEWPORT_LEFT_MARGIN
         if self.player_sprite.left < left_bndry:

@@ -63,6 +63,8 @@ class MyGame(arcade.Window):
         """
         super().__init__(WIDTH, HEIGHT, "Juego", fullscreen=True)
 
+        self.set_mouse_visible(False)
+
         file_path = os.path.dirname(os.path.abspath(__file__))
         os.chdir(file_path)
 
@@ -94,10 +96,62 @@ class MyGame(arcade.Window):
         """ Set up the game and initialize the variables. """
         # Set up the player
         self.player_list = arcade.SpriteList()
-        self.player_sprite = arcade.Sprite("resources/sprites/player/personaje sin traje.png", SPRITE_SCALING)
+        self.player_sprite = arcade.AnimatedWalkingSprite()
+
+        self.player_sprite.stand_right_textures = []
+        self.player_sprite.stand_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der0.png"))
+
+        self.player_sprite.stand_left_textures = []
+        self.player_sprite.stand_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq0.png"))
+
+        self.player_sprite.walk_right_textures = []
+        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der1.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der2.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der3.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der4.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der5.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der6.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der7.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der8.png"))
+
+        self.player_sprite.walk_left_textures = []
+        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq1.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq2.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq3.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq4.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq5.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq6.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq7.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq8.png"))
+
+        self.player_sprite.walk_down_textures = []
+        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources/sprites/player/Abajo/Abj0.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources/sprites/player/Abajo/Abj1.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources/sprites/player/Abajo/Abj2.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources/sprites/player/Abajo/Abj3.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources/sprites/player/Abajo/Abj4.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources/sprites/player/Abajo/Abj5.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources/sprites/player/Abajo/Abj6.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources/sprites/player/Abajo/Abj7.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources/sprites/player/Abajo/Abj8.png"))
+
+        self.player_sprite.walk_up_textures = []
+        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr0.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr1.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr2.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr3.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr4.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr5.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr6.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr7.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr8.png"))
+
+
+
+
         #Posición de inicio del jugador
         self.player_sprite.center_x = 300
-        self.player_sprite.center_y = 400
+        self.player_sprite.center_y = 300
 
         self.player_list.append(self.player_sprite)
 
@@ -177,6 +231,8 @@ class MyGame(arcade.Window):
 
     def on_update(self, delta_time):
         # Call update on all sprites (The sprites don't do much in this example though.)
+        self.player_list.update()
+        self.player_list.update_animation()
         self.physics_engine.update()
         changed = False
         # Scroll left

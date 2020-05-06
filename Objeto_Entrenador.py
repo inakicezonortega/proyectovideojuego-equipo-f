@@ -21,3 +21,8 @@ class Entrenador:
             # En el caso de que nuestra lista de pokemons este llena tendra que aparecer un mensaje en pantalla que explique al jugador que debe
             # o cambiar uno de sus pokemons antiguo por el actual o desechar el actual y seguir con su equipo.
             #Hace falta introducir algo en key press y un centinela
+            
+    
+    def nuevo_objeto(self, objeto):
+
+        self.inventario[objeto] = self.inventario[objeto]+1

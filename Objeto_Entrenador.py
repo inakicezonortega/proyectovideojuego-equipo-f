@@ -9,6 +9,7 @@ class Entrenador:
         self.inventario = {}
         # Lista de objetos Pokemon
         self.lista_equipo = []
+        self.lista_muertos = []
 
     def restar_dinero(self, cantidad):
         self.dinero -= cantidad

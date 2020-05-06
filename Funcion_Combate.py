@@ -1,8 +1,3 @@
-from Cambiar_Pokemon import cambiar_pokemon
-from Funcion_Huir import huir
-from Funcion_Pocion import pocion
-from daño import atacar
-
 def turno_aliado(entrenador, tipo_enemigo, hp_enemigo, def_enemigo):
     while True:
 
@@ -29,7 +24,7 @@ def turno_aliado(entrenador, tipo_enemigo, hp_enemigo, def_enemigo):
 
                         entrenador.inventario["cuerda_huida"] = entrenador.inventario["cuerda_huida"] - 1
                         print("Has huido con exito")
-                        break  # Salir del bucle
+                        return True # Salir del bucle
 
                     # Si no consigue huir
                     else:
@@ -48,7 +43,7 @@ def turno_aliado(entrenador, tipo_enemigo, hp_enemigo, def_enemigo):
 
             hp_enemigo = atacar(entrenador.lista_equipo[0].equipo, hp_enemigo, def_enemigo, tipo_enemigo,
                                 entrenador.lista_equipo[0].tipo)
-            break     #Salir del bucle
+            return False     #Salir del bucle
 
         # #  ERROR # #
         else:
@@ -65,22 +60,44 @@ def combate(entrenador, tipo_enemigo, hp_enemigo, def_enemigo, ataque_enemigo):
     #Bucle principal
     while True:
 
+
+
+
         #Ataque enemigo
-        entrenador.lista_equipo[0].HP = atacar(ataque_enemigo, entrenador.lista_equipo[0].HP, entrenador.lista_equipo[0].defensa, entrenador.lista_equipo[0].tipo, tipo_enemigo)
+        if (hp_enemigo != 0):
+            entrenador.lista_equipo[0].HP = atacar(ataque_enemigo, entrenador.lista_equipo[0].HP, entrenador.lista_equipo[0].defensa, entrenador.lista_equipo[0].tipo, tipo_enemigo)
+
+        elif (hp_enemigo == 0):
+            print ("Has ganado el combate")
+            #Añadir experiencia
+            break
+
+
+
+
 
         #Si el aliado sigue con vida
         if (entrenador.lista_equipo[0].HP != 0):
 
-            turno_aliado(entrenador, tipo_enemigo, hp_enemigo, def_enemigo)
+            if (turno_aliado(entrenador, tipo_enemigo, hp_enemigo, def_enemigo)): break    #Si ha huido
+            else: continue                                                                 #Si no ha huido
+
 
         #Si el aliado no sigue con vida
+        elif (entrenador.lista_equipo[0].HP == 0):
 
-        # AÑADIR COMPROBACION DEL RESTO DE POKEMON, SI NO QUEDAN SALIR DEL COMBATE
-
-        else:
             print ("Aliado eliminado")
             #Retirar al pokemon
+            entrenador.lista_muertos.append(entrenador.lista_equipo[0]) #Meter en la lista de muertos
+            entrenador.lista_equipo.pop(entrenador.lista_equipo[0])     #Retirar del equipo de aliado
 
-            turno_aliado(entrenador, tipo_enemigo, hp_enemigo, def_enemigo)
+            #Si quedan aliados vivos
+            if (len(entrenador.lista_equipo[0] != 0)):
 
-    
+                turno_aliado(entrenador, tipo_enemigo, hp_enemigo, def_enemigo)
+
+            #No quedan aliados vivos
+            else:
+
+                print ("Todos tus aliados han muerto, has perdido el combate")
+                break

@@ -30,8 +30,6 @@ class Room:
 def setup_room_1():
     """
     Create and return room 1.
-    If your program gets large, you may want to separate this into different
-    files.
     """
     room = Room()
 
@@ -52,6 +50,28 @@ def setup_room_1():
 
     return room
 
+def setup_room_2():
+    """
+    Create and return room 1.
+    """
+    room = Room()
+
+    """ Set up the game and initialize the variables. """
+    # Sprite lists
+    room.wall_list = arcade.SpriteList()
+    room.textura = arcade.SpriteList()
+
+    map = arcade.tilemap.read_tmx("resources/maps/nivel1.tmx")
+
+    carga = arcade.process_layer(map,"Nivel",1)
+    wall = arcade.process_layer(map,"Muros Invisibles",1)
+
+
+    room.textura = carga
+    room.wall_list = wall
+
+
+    return room
 
 
 
@@ -155,11 +175,13 @@ class MyGame(arcade.Window):
 
         self.player_list.append(self.player_sprite)
 
-
+        self.top_rooom = 1
         self.current_room = 0
         self.rooms = []
 
         room = setup_room_1()
+        self.rooms.append(room)
+        room = setup_room_2()
         self.rooms.append(room)
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
 
@@ -181,6 +203,7 @@ class MyGame(arcade.Window):
             self.genera_texto("cuadrado.png")
         if (self.current_room == 0 and self.player_sprite.center_x == 745 and self.player_sprite.center_y == 649.5):
             self.genera_texto("cuadrado.png")
+            self.tienda == True
 
             
         #Mapa de coordenadas utilizado para saber la dirección
@@ -246,6 +269,24 @@ class MyGame(arcade.Window):
         self.player_list.update()
         self.player_list.update_animation()
         self.physics_engine.update()
+        #Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
+        if(self.current_room>self.top_rooom and self.current_room !=10):
+            self.top_rooom = self.current_room
+        #Carga el piso donde se encontraba el jugador por ultima vez
+        if(self.current_room == 0 and self.player_sprite.center_x == 843 and self.player_sprite.center_y == 137.5):
+            self.current_room = self.top_rooom
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 165
+            self.player_sprite.center_y = 465
+
+        #Carga el piso del pueblo al salir del primer piso
+        if (self.current_room == 1 and self.player_sprite.center_x == 169 and self.player_sprite.center_y == 470.5):
+            self.current_room = 0
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 840
+            self.player_sprite.center_y = 120
+
+        #Sistema de camara para jugador
         changed = False
         # Scroll left
         left_bndry = self.view_left + VIEWPORT_LEFT_MARGIN

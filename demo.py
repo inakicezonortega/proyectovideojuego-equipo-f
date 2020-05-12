@@ -89,7 +89,7 @@ class MyGame(arcade.Window):
         self.tienda = False
         self.cambio = False
         self.combate = False
-
+        self.cura = False
 
 
     def setup(self):
@@ -150,8 +150,8 @@ class MyGame(arcade.Window):
 
 
         #Posición de inicio del jugador
-        self.player_sprite.center_x = 300
-        self.player_sprite.center_y = 300
+        self.player_sprite.center_x = 85
+        self.player_sprite.center_y = 537.5
 
         self.player_list.append(self.player_sprite)
 
@@ -165,15 +165,27 @@ class MyGame(arcade.Window):
 
         self.jugador = Objeto_Entrenador.Entrenador("jugador")
 
+    def genera_texto(self,text):
+
+        arcade.draw_lrwh_rectangle_textured(self.view_left,self.player_sprite.center_y/5.15,WIDTH,HEIGHT/2,arcade.load_texture("resources/sprites/trainer/"+text))
 
     def on_draw(self):
 
         arcade.start_render()
-
         self.rooms[self.current_room].textura.draw()
         self.rooms[self.current_room].wall_list.draw()
         self.player_list.draw()
 
+        #Cuadros de texto correspondientes al pueblo
+        if(self.current_room == 0 and self.player_sprite.center_x == 471 and self.player_sprite.center_y == 681.5 ):
+            self.genera_texto("cuadrado.png")
+        if (self.current_room == 0 and self.player_sprite.center_x == 745 and self.player_sprite.center_y == 649.5):
+            self.genera_texto("cuadrado.png")
+
+            
+        #Mapa de coordenadas utilizado para saber la dirección
+        arcade.draw_text("Coordenada x:"+ str(self.player_sprite.center_x),self.player_sprite.center_x+10,self.player_sprite.center_y, arcade.color.BLACK)
+        arcade.draw_text("Coordenada y:"+str(self.player_sprite.center_y), self.player_sprite.center_x+10, self.player_sprite.center_y-10, arcade.color.BLACK)
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
             self.player_sprite.change_y = MOVEMENT_SPEED

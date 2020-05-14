@@ -1,4 +1,8 @@
 import arcade
+
+from tests.Funcion_Huir import huir
+
+
 def turno_aliado(entrenador,rival,accion):
 
     pokemon_aliado = entrenador.lista_equipo[0]
@@ -15,6 +19,7 @@ def turno_aliado(entrenador,rival,accion):
                 num =0
                 num +=1
         elif accion == 4:
+            huir(entrenador)
 
         else: print("Error")
 

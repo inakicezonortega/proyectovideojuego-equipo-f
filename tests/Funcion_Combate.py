@@ -1,10 +1,9 @@
-
 import random
+
 
 ############## TURNO VS POKEMON ##############
 
 def turno_aliado_p(entrenador, pokemon, accion):
-
     while True:
 
         # # CAMBIAR # #
@@ -17,32 +16,32 @@ def turno_aliado_p(entrenador, pokemon, accion):
 
         # # POCION # #
         elif accion == 2:
-            entrenador.lista_equipo[0].HP = pocion(entrenador, entrenador.lista_equipo[0].HP, entrenador.lista_equipo[0].HP_MAX)
+            entrenador.lista_equipo[0].HP = pocion(entrenador, entrenador.lista_equipo[0].HP,
+                                                   entrenador.lista_equipo[0].HP_MAX)
 
 
         # # CUERDA HUIDA # #
         elif accion == 4:
 
             # Si tiene en el inventario
-            if (entrenador.inventario["cuerda_huida"] > 0):
+            if entrenador.inventario["cuerda_huida"] > 0:
 
                 # Si consigue huir
-                if (huir(entrenador)):
-                    return True # Salir del bucle
+                if huir(entrenador):
+                    return True  # Salir del bucle
 
 
         # #  ATACAR # #
         elif accion == 1:
 
-            pokemon.HP = atacar(entrenador.lista_equipo[0].tipo, pokemon.tipo, pokemon.HP, pokemon.HP_MAX, entrenador.lista_equipo[0].ataque)
-            return False     #Salir del bucle
-
+            pokemon.HP = atacar(entrenador.lista_equipo[0].tipo, pokemon.tipo, pokemon.HP, pokemon.HP_MAX,
+                                entrenador.lista_equipo[0].ataque)
+            return False  # Salir del bucle
 
 
 ############## TURNO VS ENTRENADOR ##############
 
 def turno_aliado_e(entrenador, rival, accion):
-
     while True:
 
         # # CAMBIAR # #
@@ -55,45 +54,47 @@ def turno_aliado_e(entrenador, rival, accion):
 
         # # POCION # #
         elif accion == 2:
-            entrenador.lista_equipo[0].HP = pocion(entrenador, entrenador.lista_equipo[0].HP, entrenador.lista_equipo[0].HP_MAX)
+            entrenador.lista_equipo[0].HP = pocion(entrenador, entrenador.lista_equipo[0].HP,
+                                                   entrenador.lista_equipo[0].HP_MAX)
 
 
         # # CUERDA HUIDA # #
         elif accion == 4:
 
             # Si tiene en el inventario
-            if (entrenador.inventario["cuerda_huida"] > 0):
+            if entrenador.inventario["cuerda_huida"] > 0:
 
                 # Si consigue huir
-                if (huir(entrenador)):
-                    return True # Salir del bucle
+                if huir(entrenador):
+                    return True  # Salir del bucle
 
 
         # #  ATACAR # #
         elif accion == 1:
 
-            rival.lista_equipo[0].HP = atacar(entrenador.lista_equipo[0].tipo, rival.lista_equipo[0].tipo, rival.lista_equipo[0].HP, rival.lista_equipo[0].HP_MAX, entrenador.lista_equipo[0].ataque)
-            return False     #Salir del bucle
-
-
+            rival.lista_equipo[0].HP = atacar(entrenador.lista_equipo[0].tipo, rival.lista_equipo[0].tipo,
+                                              rival.lista_equipo[0].HP, rival.lista_equipo[0].HP_MAX,
+                                              entrenador.lista_equipo[0].ataque)
+            return False  # Salir del bucle
 
 
 ############## COMBATE VS POKEMON ##############
 
-def combate_p(entrenador, pokemon, accion, combate, room_anterior, x_anterior, y_anterior):
-
-    #Bucle principal
+def combate_p(entrenador, pokemon, accion, room_anterior, x_anterior, y_anterior):
+    # Bucle principal
     while self.combate:
 
+        # Ataque enemigo
+        if pokemon.HP != 0:
+            entrenador.lista_equipo[0].HP = atacar(pokemon.tipo, entrenador.lista_equipo[0].tipo,
+                                                   entrenador.lista_equipo[0].HP, entrenador.lista_equipo[0].HP_MAX,
+                                                   pokemon.ataque)
 
-        #Ataque enemigo
-        if (pokemon.HP != 0):
-            entrenador.lista_equipo[0].HP = atacar(pokemon.tipo, entrenador.lista_equipo[0].tipo, entrenador.lista_equipo[0].HP, entrenador.lista_equipo[0].HP_MAX, pokemon.ataque)
+        # Gana el combate
+        elif pokemon.HP == 0:
+            entrenador.lista_equipo[0].contador_exp = exp(entrenador.lista_equipo[0].contador_exp,
+                                                          entrenador.lista_equipo[0].nivel, pokemon.nivel)
 
-        #Gana el combate
-        elif (pokemon.HP == 0):
-            entrenador.lista_equipo[0].contador_exp = exp(entrenador.lista_equipo[0].contador_exp, entrenador.lista_equipo[0].nivel, pokemon.nivel)
-            
             # Volver a la habitacion anterior
             self.current_room = room_anterior
 
@@ -102,10 +103,10 @@ def combate_p(entrenador, pokemon, accion, combate, room_anterior, x_anterior, y
             self.player_sprite.center_y = y_anterior
             break
 
-        #Si el aliado sigue con vida
-        if (entrenador.lista_equipo[0].HP != 0):
+        # Si el aliado sigue con vida
+        if entrenador.lista_equipo[0].HP != 0:
 
-            if (turno_aliado_p(entrenador, pokemon, accion)):
+            if turno_aliado_p(entrenador, pokemon, accion):
 
                 # Volver a la habitacion anterior
                 self.current_room = room_anterior
@@ -113,25 +114,25 @@ def combate_p(entrenador, pokemon, accion, combate, room_anterior, x_anterior, y
                 # Coordenadas anteriores
                 self.player_sprite.center_x = x_anterior
                 self.player_sprite.center_y = y_anterior
-                
-                break    #Si ha huido
-            else: continue                                           #Si no ha huido
+
+                break  # Si ha huido
+            else:
+                continue  # Si no ha huido
 
 
-        #Si el aliado no sigue con vida
-        elif (entrenador.lista_equipo[0].HP == 0):
+        # Si el aliado no sigue con vida
+        elif entrenador.lista_equipo[0].HP == 0:
 
+            # Retirar al pokemon
+            entrenador.lista_muertos.append(entrenador.lista_equipo[0])  # Meter en la lista de muertos
+            entrenador.lista_equipo.pop(entrenador.lista_equipo[0])  # Retirar del equipo de aliado
 
-            #Retirar al pokemon
-            entrenador.lista_muertos.append(entrenador.lista_equipo[0]) #Meter en la lista de muertos
-            entrenador.lista_equipo.pop(entrenador.lista_equipo[0])     #Retirar del equipo de aliado
-
-            #Si quedan aliados vivos
-            if (len(entrenador.lista_equipo[0] != 0)):
+            # Si quedan aliados vivos
+            if len(entrenador.lista_equipo[0] != 0):
 
                 turno_aliado_p(entrenador, pokemon, accion)
 
-            #No quedan aliados vivos
+            # No quedan aliados vivos
             else:
 
                 # Volver a la habitacion inicial
@@ -140,36 +141,36 @@ def combate_p(entrenador, pokemon, accion, combate, room_anterior, x_anterior, y
                 # Coordenadas iniciales
                 self.player_sprite.center_x = 840
                 self.player_sprite.center_y = 120
-                
-                break
 
+                break
 
 
 ############## COMBATE VS ENTRENADOR ##############
 
-def combate_e(entrenador, rival, accion, combate, room_anterior, x_anterior, y_anterior):
+def combate_e(entrenador, rival, accion, room_anterior, x_anterior, y_anterior):
     # Bucle principal
     while self.combate:
 
         # Ataque enemigo
-        if (rival.lista_equipo[0].HP != 0):
+        if rival.lista_equipo[0].HP != 0:
             entrenador.lista_equipo[0].HP = atacar(rival.lista_equipo[0].tipo, entrenador.lista_equipo[0].tipo,
                                                    entrenador.lista_equipo[0].HP, entrenador.lista_equipo[0].HP_MAX,
                                                    rival.lista_equipo[0].ataque)
 
         # Ganar el combate
-        elif (rival.lista_equipo[0].HP == 0):
+        elif rival.lista_equipo[0].HP == 0:
 
             # Si quedan enemigos vivos, cambiar el que combate
-            if (len(rival.lista_equipo[0] != 0)):
-                rival.lista_muertos.append(rival.lista_equipo[0])   #Añado a la lista de muertos
-                rival.lista_equipo.pop(0)   #Retirara de disponibles
-                
-                
+            if len(rival.lista_equipo[0] != 0):
+                rival.lista_muertos.append(rival.lista_equipo[0])  # Añado a la lista de muertos
+                rival.lista_equipo.pop(0)  # Retirara de disponibles
+
+
             # No quedan enemigos vivos
             else:
                 entrenador.lista_equipo[0].contador_exp = exp(entrenador.lista_equipo[0].contador_exp,
-                                                              entrenador.lista_equipo[0].nivel, rival.lista_equipo[0].nivel)
+                                                              entrenador.lista_equipo[0].nivel,
+                                                              rival.lista_equipo[0].nivel)
                 # Volver a la habitacion anterior
                 self.current_room = room_anterior
 
@@ -179,66 +180,63 @@ def combate_e(entrenador, rival, accion, combate, room_anterior, x_anterior, y_a
                 break
 
         # Si el aliado sigue con vida
-        if (entrenador.lista_equipo[0].HP != 0):
+        if entrenador.lista_equipo[0].HP != 0:
 
-            if (turno_aliado_p(entrenador, rival, accion)):
+            if turno_aliado_p(entrenador, rival, accion):
                 break  # Si ha huido
             else:
                 continue  # Si no ha huido
 
 
         # Si el aliado no sigue con vida
-        elif (entrenador.lista_equipo[0].HP == 0):
+        elif entrenador.lista_equipo[0].HP == 0:
 
             # Retirar al pokemon
             entrenador.lista_muertos.append(entrenador.lista_equipo[0])  # Meter en la lista de muertos
             entrenador.lista_equipo.pop(entrenador.lista_equipo[0])  # Retirar del equipo de aliado
 
             # Si quedan aliados vivos
-            if (len(entrenador.lista_equipo[0] != 0)):
+            if len(entrenador.lista_equipo[0] != 0):
 
                 turno_aliado_p(entrenador, rival, accion)
 
             # No quedan aliados vivos
             else:
-                #Pierdes el combate, los pokemon enemigos vuelven a su estado inicial
+                # Pierdes el combate, los pokemon enemigos vuelven a su estado inicial
                 for pokemon_muerto in rival.lista_muertos:
-                    pokemon_muerto.HP = pokemon_muerto.HP_MAX   #Cura al pokemon
-                    rival.lista_equipo.append(pokemon_muerto)   #Lo añade a los disponibles
-                    rival.lista_muertos.pop(pokemon_muerto)     #Lo retira de lista de muertos
+                    pokemon_muerto.HP = pokemon_muerto.HP_MAX  # Cura al pokemon
+                    rival.lista_equipo.append(pokemon_muerto)  # Lo añade a los disponibles
+                    rival.lista_muertos.pop(pokemon_muerto)  # Lo retira de lista de muertos
 
                 # Volver a la habitacion inicial
-                self.current_room = 1   
+                self.current_room = 1
 
                 # Coordenadas iniciales
-                self.player_sprite.center_x = 840 
+                self.player_sprite.center_x = 840
                 self.player_sprite.center_y = 120
-                
-                break   #Termina el combate
 
-
-
+                break  # Termina el combate
 
 
 ############## FUNCIONES NECESARIAS PARA EL COMBATE ##############
 
 def pocion(entrenador, vida_aliado, vida_maxima):
-    if vida_aliado != vida_maxima and entrenador["pocion"]!=0:
+    if vida_aliado != vida_maxima and entrenador["pocion"] != 0:
         entrenador.inventario.pop("pocion")
-        return (vida_aliado * 1.5)
+        return vida_aliado * 1.5
 
-    else: return vida_maxima
+    else:
+        return vida_maxima
 
 
-
-def exp(exp_actual,lvl_aliado,lvl_enemigo):
-    #Comprobador de diferencia de niveles entre aliado y enemigo
+def exp(exp_actual, lvl_aliado, lvl_enemigo):
+    # Comprobador de diferencia de niveles entre aliado y enemigo
     dif_nivel = lvl_aliado - lvl_enemigo
-    #si nivel aliado es mayor->dara menos exp
-    #si nivel aliado es menor->dara mas exp
-    #si los niveles son iguales->dara un numero base de exp
+    # si nivel aliado es mayor->dara menos exp
+    # si nivel aliado es menor->dara mas exp
+    # si los niveles son iguales->dara un numero base de exp
     if dif_nivel == 0:
-        exp_actual = exp_actual +  8
+        exp_actual = exp_actual + 8
     elif dif_nivel > 0:
         exp_actual = exp_actual + 5
     elif dif_nivel < 0:
@@ -247,19 +245,19 @@ def exp(exp_actual,lvl_aliado,lvl_enemigo):
     return exp_actual
 
 
-
 def huir(entrenador):
-
-    x = random.randrange(9)    #Numeros del 0 al 9
+    x = random.randrange(9)  # Numeros del 0 al 9
 
     entrenador.lista_equipo["cuerda_huida"] = entrenador.inventario["cuerda_huida"] - 1
 
-    #La cuerda huida tiene un 30% de probabilidades de acertar, por lo tanto si x es 0, 1 o 2 surtira efecto
-    if x > -1 and x < 3: return True
-    else: return False
+    # La cuerda huida tiene un 30% de probabilidades de acertar, por lo tanto si x es 0, 1 o 2 surtira efecto
+    if -1 < x < 3:
+        return True
+    else:
+        return False
 
 
-def atacar(tipo_aliado , tipo_enemigo,hp_enemigo,hp_total,ataque):
+def atacar(tipo_aliado, tipo_enemigo, hp_enemigo, hp_total, ataque):
     if tipo_aliado == "demonio":
         if tipo_enemigo == "demonio":  # demonio vs demonio
             if hp_enemigo > hp_total - ataque:
@@ -481,4 +479,3 @@ def atacar(tipo_aliado , tipo_enemigo,hp_enemigo,hp_total,ataque):
             return hp_enemigo - 1
         else:
             return hp_total - ataque
-

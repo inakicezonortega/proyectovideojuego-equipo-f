@@ -17,14 +17,60 @@ VIEWPORT_LEFT_MARGIN = 270
 
 MOVEMENT_SPEED = 3
 
+
 class Room:
     """
     This class holds all the information about the
     different rooms.
     """
+
     def __init__(self):
         self.wall_list = None
         self.textura = None
+
+
+def setup_pueblo():
+    """
+    Create and return room 1.
+    """
+    room = Room()
+
+    """ Set up the game and initialize the variables. """
+    # Sprite lists
+    room.wall_list = arcade.SpriteList()
+    room.textura = arcade.SpriteList()
+
+    map = arcade.tilemap.read_tmx("resources/maps/nivel0.tmx")
+
+    carga = arcade.process_layer(map, "Nivel", 1)
+    wall = arcade.process_layer(map, "Muros Invisibles", 1)
+
+    room.textura = carga
+    room.wall_list = wall
+
+    return room
+
+
+def setup_room_1():
+    """
+    Create and return room 1.
+    """
+    room = Room()
+
+    """ Set up the game and initialize the variables. """
+    # Sprite lists
+    room.wall_list = arcade.SpriteList()
+    room.textura = arcade.SpriteList()
+
+    map = arcade.tilemap.read_tmx("resources/maps/nivel1.tmx")
+
+    carga = arcade.process_layer(map, "Nivel", 1)
+    wall = arcade.process_layer(map, "Muros Invisibles", 1)
+
+    room.textura = carga
+    room.wall_list = wall
+
+    return room
 
 
 def setup_combate():
@@ -40,16 +86,13 @@ def setup_combate():
 
     map = arcade.tilemap.read_tmx("resources/maps/combate.tmx")
 
-    carga = arcade.process_layer(map,"Nivel",1)
-    wall = arcade.process_layer(map,"Muros Invisibles",1)
-
+    carga = arcade.process_layer(map, "Nivel", 1)
+    wall = arcade.process_layer(map, "Muros Invisibles", 1)
 
     room.textura = carga
     room.wall_list = wall
 
-
     return room
-
 
 
 # Juego
@@ -81,13 +124,11 @@ class MyGame(arcade.Window):
         self.view_bottom = 0
         self.physics_engine = None
 
-
         # Variables globales para las teclas
         self.tienda = False
         self.cambio = False
         self.combate = False
         self.cura = False
-
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -99,7 +140,8 @@ class MyGame(arcade.Window):
         self.player_sprite.stand_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der0.png"))
 
         self.player_sprite.stand_left_textures = []
-        self.player_sprite.stand_left_textures.append(arcade.load_texture("resources/sprites/player/Izquierda/Izq0.png"))
+        self.player_sprite.stand_left_textures.append(
+            arcade.load_texture("resources/sprites/player/Izquierda/Izq0.png"))
 
         self.player_sprite.walk_right_textures = []
         self.player_sprite.walk_right_textures.append(arcade.load_texture("resources/sprites/player/Derecha/Der1.png"))
@@ -143,10 +185,7 @@ class MyGame(arcade.Window):
         self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr7.png"))
         self.player_sprite.walk_up_textures.append(arcade.load_texture("resources/sprites/player/Arriba/Arr8.png"))
 
-
-
-
-        #Posición de inicio del jugador
+        # Posición de inicio del jugador
         self.player_sprite.center_x = 85
         self.player_sprite.center_y = 537.5
 
@@ -156,21 +195,21 @@ class MyGame(arcade.Window):
         self.current_room = 0
         self.rooms = []
 
-
+        room = setup_pueblo()
+        self.rooms.append(room)
+        room = setup_room_1()
+        self.rooms.append(room)
         room = setup_combate()
         self.rooms.append(room)
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
 
         self.jugador = Objeto_Entrenador.Entrenador("jugador")
 
-    def genera_texto(self,text):
+    def genera_texto(self, text):
 
-        arcade.draw_lrwh_rectangle_textured(self.view_left,self.player_sprite.center_y/5.15,WIDTH,HEIGHT/2,arcade.load_texture("resources/sprites/trainer/"+text))
-    def texto_combate(self,nombre_pokemon1,nivel_pokemon1,HP_pokemon1,HP_MAX_pokemon1,nombre_pokemon2,nivel_pokemon2,HP_pokemon2,HP_MAX_pokemon2):
-        arcade.draw_text(nombre_pokemon1+"                 "+str(nivel_pokemon1), 534, 245, arcade.color.BLACK, 12)
-        arcade.draw_text(str(HP_pokemon1)+"/"+str(HP_MAX_pokemon1), 534, 223, arcade.color.BLACK, 12)
-        arcade.draw_text(nombre_pokemon2+"                 "+str(nivel_pokemon2), 300, 530, arcade.color.BLACK, 12)
-        arcade.draw_text(str(HP_pokemon2)+"/"+str(HP_MAX_pokemon2), 300, 510, arcade.color.BLACK, 12)
+        arcade.draw_lrwh_rectangle_textured(self.view_left, self.player_sprite.center_y / 5.15, WIDTH, HEIGHT / 2,
+                                            arcade.load_texture("resources/sprites/trainer/" + text))
+
     def on_draw(self):
 
         arcade.start_render()
@@ -178,20 +217,23 @@ class MyGame(arcade.Window):
         self.rooms[self.current_room].wall_list.draw()
         self.player_list.draw()
 
-        #Cuadros de texto correspondientes al pueblo
-        if(self.current_room == 0 and self.player_sprite.center_x == 471 and self.player_sprite.center_y == 681.5 ):
+        # Cuadros de texto correspondientes al pueblo
+        if (self.current_room == 0 and self.player_sprite.center_x == 471 and self.player_sprite.center_y == 681.5):
             self.genera_texto("cuadrado.png")
         if (self.current_room == 0 and self.player_sprite.center_x == 745 and self.player_sprite.center_y == 649.5):
             self.genera_texto("cuadrado.png")
             self.tienda == True
-        if(self.current_room == 0 ):
-            self.texto_combate("Hola","32",100,200,"Hola2","42",500,200)
 
+        arcade.draw_text("Nombre Pokemon1 + LVL", 534, 253, arcade.color.BLACK, 12)
+        arcade.draw_text("HP Pokemon1", 534, 223, arcade.color.BLACK, 12)
+        arcade.draw_text("Nombre Pokemon1", 300, 530, arcade.color.BLACK, 12)
+        arcade.draw_text("HP Pokemon2", 300, 510, arcade.color.BLACK, 12)
 
-            
-        #Mapa de coordenadas utilizado para saber la dirección
-        arcade.draw_text("Coordenada x:"+ str(self.player_sprite.center_x),self.player_sprite.center_x+10,self.player_sprite.center_y, arcade.color.WHITE)
-        arcade.draw_text("Coordenada y:"+str(self.player_sprite.center_y), self.player_sprite.center_x+10, self.player_sprite.center_y-10, arcade.color.WHITE)
+        # Mapa de coordenadas utilizado para saber la dirección
+        arcade.draw_text("Coordenada x:" + str(self.player_sprite.center_x), self.player_sprite.center_x + 10,
+                         self.player_sprite.center_y, arcade.color.WHITE)
+        arcade.draw_text("Coordenada y:" + str(self.player_sprite.center_y), self.player_sprite.center_x + 10,
+                         self.player_sprite.center_y - 10, arcade.color.WHITE)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
@@ -217,18 +259,17 @@ class MyGame(arcade.Window):
 
         if (self.combate == True and self.cambio == True):
             if key == arcade.key.KEY_1:
-                cambiar_pokemon(self.jugador,1)
+                cambiar_pokemon(self.jugador, 1)
                 self.cambio = False
             if key == arcade.key.KEY_2:
-                cambiar_pokemon(self.jugador,2)
+                cambiar_pokemon(self.jugador, 2)
                 self.cambio = False
             if key == arcade.key.KEY_3:
-                cambiar_pokemon(self.jugador,3)
+                cambiar_pokemon(self.jugador, 3)
                 self.cambio = False
             if key == arcade.key.KEY_4:
-                cambiar_pokemon(self.jugador,4)
+                cambiar_pokemon(self.jugador, 4)
                 self.cambio = False
-
 
         if (self.tienda == True):
             if key == arcade.key.KEY_1:
@@ -261,9 +302,40 @@ class MyGame(arcade.Window):
         self.player_list.update_animation()
         self.physics_engine.update()
 
+        # Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
+        if (self.current_room > self.top_rooom and self.current_room != 10):
+            self.top_rooom = self.current_room
+        # Carga el piso donde se encontraba el jugador por ultima vez
+        if (self.current_room == 0 and self.player_sprite.center_x == 843 and self.player_sprite.center_y == 137.5):
+            self.current_room = self.top_rooom
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 165
+            self.player_sprite.center_y = 465
 
+        # Carga el piso del pueblo al salir del primer piso
+        if (self.current_room == 1 and self.player_sprite.center_x == 169 and self.player_sprite.center_y == 470.5):
+            self.current_room = 0
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 840
+            self.player_sprite.center_y = 120
 
-        #Sistema de camara para jugador
+        # Prueba combate
+        if (self.current_room == 1 and self.player_sprite.center_x == 873 and self.player_sprite.center_y == 425.5):
+            self.current_room = 2
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 300
+            self.player_sprite.center_y = 55
+            arcade.draw_text("Nombre Pokemon1 + LVL", 534, 253, arcade.color.BLACK, 12)
+            arcade.draw_text("HP Pokemon1", 534, 223, arcade.color.BLACK, 12)
+            arcade.draw_text("Nombre Pokemon1", 300, 550, arcade.color.BLACK, 12)
+            arcade.draw_text("HP Pokemon2", 300, 521.5, arcade.color.BLACK, 12)
+            # self.player_sprite.center_x = 400
+            # self.player_sprite.center_y = 55
+
+        # Sistema de camara para jugador
         changed = False
         # Scroll left
         left_bndry = self.view_left + VIEWPORT_LEFT_MARGIN
@@ -303,5 +375,6 @@ def main():
     window = MyGame()
     window.setup()
     arcade.run()
+
 
 main()

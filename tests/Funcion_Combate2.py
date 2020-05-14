@@ -1,3 +1,4 @@
+import arcade
 def turno_aliado(entrenador,rival,accion):
 
     pokemon_aliado = entrenador.lista_equipo[0]
@@ -9,7 +10,12 @@ def turno_aliado(entrenador,rival,accion):
         elif accion == 2:
             pocion(entrenador,pokemon_aliado.HP,pokemon_aliado.HP_MAX)
         elif accion == 3:
+            cambio = True
+            while cambio != True:
+                num =0
+                num +=1
         elif accion == 4:
+
         else: print("Error")
 
 

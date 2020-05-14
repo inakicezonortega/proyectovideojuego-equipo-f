@@ -2,7 +2,7 @@ import arcade
 import os
 import Objeto_Entrenador
 import Objeto_Pokemon
-
+from tests.Cambiar_Pokemon import cambiar_pokemon
 
 WIDTH = 800
 HEIGHT = 600
@@ -209,6 +209,7 @@ class MyGame(arcade.Window):
         #Mapa de coordenadas utilizado para saber la dirección
         arcade.draw_text("Coordenada x:"+ str(self.player_sprite.center_x),self.player_sprite.center_x+10,self.player_sprite.center_y, arcade.color.BLACK)
         arcade.draw_text("Coordenada y:"+str(self.player_sprite.center_y), self.player_sprite.center_x+10, self.player_sprite.center_y-10, arcade.color.BLACK)
+
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
             self.player_sprite.change_y = MOVEMENT_SPEED
@@ -232,12 +233,19 @@ class MyGame(arcade.Window):
             if key == arcade.key.KEY_4:      pass
 
         if (self.combate == True and self.cambio == True):
-            if key == arcade.key.KEY_1:      pass
-            if key == arcade.key.KEY_2:      pass
-            if key == arcade.key.KEY_3:      pass
-            if key == arcade.key.KEY_4:      pass
-            if key == arcade.key.KEY_5:      pass
-            if key == arcade.key.KEY_6:      pass
+            if key == arcade.key.KEY_1:
+                cambiar_pokemon(self.jugador,1)
+                self.cambio = False
+            if key == arcade.key.KEY_2:
+                cambiar_pokemon(self.jugador,2)
+                self.cambio = False
+            if key == arcade.key.KEY_3:
+                cambiar_pokemon(self.jugador,3)
+                self.cambio = False
+            if key == arcade.key.KEY_4:
+                cambiar_pokemon(self.jugador,4)
+                self.cambio = False
+
 
         if (self.tienda == True):
             if key == arcade.key.KEY_1:

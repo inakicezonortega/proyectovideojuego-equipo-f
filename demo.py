@@ -269,6 +269,7 @@ class MyGame(arcade.Window):
         self.player_list.update()
         self.player_list.update_animation()
         self.physics_engine.update()
+
         #Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
         if(self.current_room>self.top_rooom and self.current_room !=10):
             self.top_rooom = self.current_room

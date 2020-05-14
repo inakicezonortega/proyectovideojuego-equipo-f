@@ -83,7 +83,7 @@ def turno_aliado_e(entrenador, rival, accion):
 def combate_p(entrenador, pokemon, accion, combate, room_anterior, x_anterior, y_anterior):
 
     #Bucle principal
-    while combate:
+    while self.combate:
 
 
         #Ataque enemigo
@@ -149,7 +149,7 @@ def combate_p(entrenador, pokemon, accion, combate, room_anterior, x_anterior, y
 
 def combate_e(entrenador, rival, accion, combate, room_anterior, x_anterior, y_anterior):
     # Bucle principal
-    while combate:
+    while self.combate:
 
         # Ataque enemigo
         if (rival.lista_equipo[0].HP != 0):

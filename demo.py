@@ -27,7 +27,7 @@ class Room:
         self.textura = None
 
 
-def setup_room_1():
+def setup_pueblo():
     """
     Create and return room 1.
     """
@@ -50,7 +50,7 @@ def setup_room_1():
 
     return room
 
-def setup_room_2():
+def setup_room_1():
     """
     Create and return room 1.
     """
@@ -62,6 +62,28 @@ def setup_room_2():
     room.textura = arcade.SpriteList()
 
     map = arcade.tilemap.read_tmx("resources/maps/nivel1.tmx")
+
+    carga = arcade.process_layer(map,"Nivel",1)
+    wall = arcade.process_layer(map,"Muros Invisibles",1)
+
+
+    room.textura = carga
+    room.wall_list = wall
+
+
+    return room
+def setup_combate():
+    """
+    Create and return combate.
+    """
+    room = Room()
+
+    """ Set up the game and initialize the variables. """
+    # Sprite lists
+    room.wall_list = arcade.SpriteList()
+    room.textura = arcade.SpriteList()
+
+    map = arcade.tilemap.read_tmx("resources/maps/combate.tmx")
 
     carga = arcade.process_layer(map,"Nivel",1)
     wall = arcade.process_layer(map,"Muros Invisibles",1)
@@ -179,9 +201,11 @@ class MyGame(arcade.Window):
         self.current_room = 0
         self.rooms = []
 
+        room = setup_pueblo()
+        self.rooms.append(room)
         room = setup_room_1()
         self.rooms.append(room)
-        room = setup_room_2()
+        room = setup_combate()
         self.rooms.append(room)
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
 
@@ -205,10 +229,14 @@ class MyGame(arcade.Window):
             self.genera_texto("cuadrado.png")
             self.tienda == True
 
+        arcade.draw_text("Nombre Pokemon1 + LVL", 534, 253, arcade.color.BLACK, 12)
+        arcade.draw_text("HP Pokemon1", 534, 223, arcade.color.BLACK, 12)
+        arcade.draw_text("Nombre Pokemon1", 300, 530, arcade.color.BLACK, 12)
+        arcade.draw_text("HP Pokemon2", 300, 510, arcade.color.BLACK, 12)
             
         #Mapa de coordenadas utilizado para saber la dirección
-        arcade.draw_text("Coordenada x:"+ str(self.player_sprite.center_x),self.player_sprite.center_x+10,self.player_sprite.center_y, arcade.color.BLACK)
-        arcade.draw_text("Coordenada y:"+str(self.player_sprite.center_y), self.player_sprite.center_x+10, self.player_sprite.center_y-10, arcade.color.BLACK)
+        arcade.draw_text("Coordenada x:"+ str(self.player_sprite.center_x),self.player_sprite.center_x+10,self.player_sprite.center_y, arcade.color.WHITE)
+        arcade.draw_text("Coordenada y:"+str(self.player_sprite.center_y), self.player_sprite.center_x+10, self.player_sprite.center_y-10, arcade.color.WHITE)
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
@@ -294,6 +322,19 @@ class MyGame(arcade.Window):
             self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,self.rooms[self.current_room].wall_list)
             self.player_sprite.center_x = 840
             self.player_sprite.center_y = 120
+
+        #Prueba combate
+        if (self.current_room == 1 and self.player_sprite.center_x == 873 and self.player_sprite.center_y == 425.5):
+            self.current_room = 2
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 300
+            self.player_sprite.center_y = 55
+            arcade.draw_text("Nombre Pokemon1 + LVL",534,253,arcade.color.BLACK,12)
+            arcade.draw_text("HP Pokemon1", 534, 223, arcade.color.BLACK, 12)
+            arcade.draw_text("Nombre Pokemon1", 300, 550, arcade.color.BLACK, 12)
+            arcade.draw_text("HP Pokemon2", 300, 521.5, arcade.color.BLACK, 12)
+            #self.player_sprite.center_x = 400
+            #self.player_sprite.center_y = 55
 
         #Sistema de camara para jugador
         changed = False

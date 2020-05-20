@@ -3,7 +3,7 @@ import random
 
 ############## TURNO VS POKEMON ##############
 
-def turno_aliado_p(entrenador, pokemon, accion):
+def turno_aliado(entrenador, pokemon, accion):
     while True:
 
         # # CAMBIAR # #
@@ -41,7 +41,7 @@ def turno_aliado_p(entrenador, pokemon, accion):
 
 ############## TURNO VS ENTRENADOR ##############
 
-def turno_aliado_e(entrenador, rival, accion):
+def turno_aliado(entrenador, rival, accion):
     while True:
 
         # # CAMBIAR # #
@@ -80,7 +80,7 @@ def turno_aliado_e(entrenador, rival, accion):
 
 ############## COMBATE VS POKEMON ##############
 
-def combate_p(entrenador, pokemon, accion, room_anterior, x_anterior, y_anterior):
+def combate(entrenador, pokemon, accion, room_anterior, x_anterior, y_anterior):
     # Bucle principal
     while self.combate:
 
@@ -147,7 +147,7 @@ def combate_p(entrenador, pokemon, accion, room_anterior, x_anterior, y_anterior
 
 ############## COMBATE VS ENTRENADOR ##############
 
-def combate_e(entrenador, rival, accion, room_anterior, x_anterior, y_anterior):
+def combate(entrenador, rival, accion, room_anterior, x_anterior, y_anterior):
     # Bucle principal
     while self.combate:
 

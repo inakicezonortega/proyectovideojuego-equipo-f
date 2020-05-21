@@ -1,6 +1,6 @@
 
 class Pokemon:
-    def __init__(self,nombre,tipo,nivel,exp_final,HP_MAX,ataque,defensa):
+    def __init__(self,nombre,tipo,nivel,exp_final,HP_MAX,ataque,defensa,imagen):
         #Constructor
         # String
         self.nombre = nombre
@@ -15,8 +15,8 @@ class Pokemon:
         #Estadisticas daño y defensa INT
         self.ataque = ataque
         self.defensa = defensa
-        #Tipo lista de objetos con 4 ataques como máximo
-
+        #String con el enlace al tipo de imagen del fakemon
+        self.imagen = imagen
 
     # Definimos las funciones principales relacionado con HP
     def sumar_HP(self,cantidad):

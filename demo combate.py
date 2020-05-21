@@ -18,7 +18,8 @@ VIEWPORT_LEFT_MARGIN = 270
 
 MOVEMENT_SPEED = 3
 
-#La clase room es aquella clase que crea los escenarios donde se desplaza el jugador
+
+# La clase room es aquella clase que crea los escenarios donde se desplaza el jugador
 class Room:
     """
     Esta clase crea y caga las distintas habitaciones del juego
@@ -35,11 +36,11 @@ def setup_pueblo():
     """
     room = Room()
 
-   # Lista de Sprites
+    # Lista de Sprites
     room.wall_list = arcade.SpriteList()
     room.textura = arcade.SpriteList()
 
-    map = arcade.tilemap.read_tmx("resources"+os.path.sep+"maps"+os.path.sep+"nivel0.tmx")
+    map = arcade.tilemap.read_tmx("resources" + os.path.sep + "maps" + os.path.sep + "nivel0.tmx")
 
     carga = arcade.process_layer(map, "Nivel", 1)
     wall = arcade.process_layer(map, "Muros Invisibles", 1)
@@ -56,11 +57,11 @@ def setup_room_1():
     """
     room = Room()
 
-    #Lista de Sprites
+    # Lista de Sprites
     room.wall_list = arcade.SpriteList()
     room.textura = arcade.SpriteList()
 
-    map = arcade.tilemap.read_tmx("resources"+os.path.sep+"maps"+os.path.sep+"nivel1.tmx")
+    map = arcade.tilemap.read_tmx("resources" + os.path.sep + "maps" + os.path.sep + "nivel1.tmx")
 
     carga = arcade.process_layer(map, "Nivel", 1)
     wall = arcade.process_layer(map, "Muros Invisibles", 1)
@@ -77,12 +78,11 @@ def setup_combate():
     """
     room = Room()
 
-
-    #Lista de Sprites
+    # Lista de Sprites
     room.wall_list = arcade.SpriteList()
     room.textura = arcade.SpriteList()
 
-    map = arcade.tilemap.read_tmx("resources"+os.path.sep+"maps"+os.path.sep+"combate.tmx")
+    map = arcade.tilemap.read_tmx("resources" + os.path.sep + "maps" + os.path.sep + "combate.tmx")
 
     carga = arcade.process_layer(map, "Nivel", 1)
     wall = arcade.process_layer(map, "Muros Invisibles", 1)
@@ -122,11 +122,12 @@ class MyGame(arcade.Window):
         self.view_bottom = 0
         self.physics_engine = None
 
-        # Variables globales para las teclas
+        # Variables globales para los principales procesos del juego
         self.tienda = False
         self.cambio = False
         self.combate = False
         self.cuerda_huida = False
+
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -135,57 +136,92 @@ class MyGame(arcade.Window):
         self.player_sprite = arcade.AnimatedWalkingSprite()
 
         self.player_sprite.stand_right_textures = []
-        self.player_sprite.stand_right_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Derecha"+os.path.sep+"Der0.png"))
+        self.player_sprite.stand_right_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Derecha" + os.path.sep + "Der0.png"))
 
         self.player_sprite.stand_left_textures = []
         self.player_sprite.stand_left_textures.append(
             arcade.load_texture("resources/sprites/player/Izquierda/Izq0.png"))
 
-        #Cargamos las texturas para el movimiento derecho
+        # Cargamos las texturas para el movimiento derecho
         self.player_sprite.walk_right_textures = []
-        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Derecha"+os.path.sep+"Der1.png"))
-        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Derecha"+os.path.sep+"Der2.png"))
-        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Derecha"+os.path.sep+"Der3.png"))
-        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Derecha"+os.path.sep+"Der4.png"))
-        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Derecha"+os.path.sep+"Der5.png"))
-        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Derecha"+os.path.sep+"Der6.png"))
-        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Derecha"+os.path.sep+"Der7.png"))
-        self.player_sprite.walk_right_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Derecha"+os.path.sep+"Der8.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Derecha" + os.path.sep + "Der1.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Derecha" + os.path.sep + "Der2.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Derecha" + os.path.sep + "Der3.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Derecha" + os.path.sep + "Der4.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Derecha" + os.path.sep + "Der5.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Derecha" + os.path.sep + "Der6.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Derecha" + os.path.sep + "Der7.png"))
+        self.player_sprite.walk_right_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Derecha" + os.path.sep + "Der8.png"))
 
         # Cargamos las texturas para el movimiento  izquierdo
         self.player_sprite.walk_left_textures = []
-        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Izquierda"+os.path.sep+"Izq1.png"))
-        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Izquierda"+os.path.sep+"Izq2.png"))
-        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Izquierda"+os.path.sep+"Izq3.png"))
-        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Izquierda"+os.path.sep+"Izq4.png"))
-        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Izquierda"+os.path.sep+"Izq5.png"))
-        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Izquierda"+os.path.sep+"Izq6.png"))
-        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Izquierda"+os.path.sep+"Izq7.png"))
-        self.player_sprite.walk_left_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Izquierda"+os.path.sep+"Izq8.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Izquierda" + os.path.sep + "Izq1.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Izquierda" + os.path.sep + "Izq2.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Izquierda" + os.path.sep + "Izq3.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Izquierda" + os.path.sep + "Izq4.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Izquierda" + os.path.sep + "Izq5.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Izquierda" + os.path.sep + "Izq6.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Izquierda" + os.path.sep + "Izq7.png"))
+        self.player_sprite.walk_left_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Izquierda" + os.path.sep + "Izq8.png"))
 
         # Cargamos las texturas para el movimiento abajo
         self.player_sprite.walk_down_textures = []
-        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Abajo"+os.path.sep+"Abj0.png"))
-        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Abajo"+os.path.sep+"Abj1.png"))
-        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Abajo"+os.path.sep+"Abj2.png"))
-        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Abajo"+os.path.sep+"Abj3.png"))
-        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Abajo"+os.path.sep+"Abj4.png"))
-        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Abajo"+os.path.sep+"Abj5.png"))
-        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Abajo"+os.path.sep+"Abj6.png"))
-        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Abajo"+os.path.sep+"Abj7.png"))
-        self.player_sprite.walk_down_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Abajo"+os.path.sep+"Abj8.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Abajo" + os.path.sep + "Abj0.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Abajo" + os.path.sep + "Abj1.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Abajo" + os.path.sep + "Abj2.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Abajo" + os.path.sep + "Abj3.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Abajo" + os.path.sep + "Abj4.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Abajo" + os.path.sep + "Abj5.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Abajo" + os.path.sep + "Abj6.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Abajo" + os.path.sep + "Abj7.png"))
+        self.player_sprite.walk_down_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Abajo" + os.path.sep + "Abj8.png"))
 
         # Cargamos las texturas para el movimiento de arriba
         self.player_sprite.walk_up_textures = []
-        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Arriba"+os.path.sep+"Arr0.png"))
-        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Arriba"+os.path.sep+"Arr1.png"))
-        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Arriba"+os.path.sep+"Arr2.png"))
-        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Arriba/Arr3.png"))
-        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Arriba"+os.path.sep+"Arr4.png"))
-        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Arriba"+os.path.sep+"Arr5.png"))
-        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Arriba"+os.path.sep+"Arr6.png"))
-        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Arriba"+os.path.sep+"Arr7.png"))
-        self.player_sprite.walk_up_textures.append(arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"player"+os.path.sep+"Arriba"+os.path.sep+"Arr8.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Arriba" + os.path.sep + "Arr0.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Arriba" + os.path.sep + "Arr1.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Arriba" + os.path.sep + "Arr2.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Arriba/Arr3.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Arriba" + os.path.sep + "Arr4.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Arriba" + os.path.sep + "Arr5.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Arriba" + os.path.sep + "Arr6.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Arriba" + os.path.sep + "Arr7.png"))
+        self.player_sprite.walk_up_textures.append(arcade.load_texture(
+            "resources" + os.path.sep + "sprites" + os.path.sep + "player" + os.path.sep + "Arriba" + os.path.sep + "Arr8.png"))
 
         # Posición de inicio del jugador
         self.player_sprite.center_x = 85
@@ -207,12 +243,12 @@ class MyGame(arcade.Window):
 
         self.jugador = Objeto_Entrenador.Entrenador("jugador")
 
-
-    #Esta funcion recibe el texto dentro de los sprites y dibuja el cuadro de texto
+    # Esta funcion recibe el texto dentro de los sprites y dibuja el cuadro de texto
     def genera_texto(self, text):
 
         arcade.draw_lrwh_rectangle_textured(self.view_left, self.player_sprite.center_y / 5.15, WIDTH, HEIGHT / 2,
-                                            arcade.load_texture("resources"+os.path.sep+"sprites"+os.path.sep+"messages"+os.path.sep+text))
+                                            arcade.load_texture(
+                                                "resources" + os.path.sep + "sprites" + os.path.sep + "messages" + os.path.sep + text))
 
     def on_draw(self):
 
@@ -227,7 +263,6 @@ class MyGame(arcade.Window):
         if (self.current_room == 0 and self.player_sprite.center_x == 745 and self.player_sprite.center_y == 649.5):
             self.genera_texto("cuadrado.png")
 
-
         arcade.draw_text("Nombre Pokemon1 + LVL", 534, 253, arcade.color.BLACK, 12)
         arcade.draw_text("HP Pokemon1", 534, 223, arcade.color.BLACK, 12)
         arcade.draw_text("Nombre Pokemon1", 300, 530, arcade.color.BLACK, 12)
@@ -238,7 +273,6 @@ class MyGame(arcade.Window):
                          self.player_sprite.center_y, arcade.color.WHITE)
         arcade.draw_text("Coordenada y:" + str(self.player_sprite.center_y), self.player_sprite.center_x + 10,
                          self.player_sprite.center_y - 10, arcade.color.WHITE)
-
 
     def on_key_press(self, key, modifiers):
         if key == arcade.key.W:
@@ -256,14 +290,14 @@ class MyGame(arcade.Window):
             width, height = self.get_size()
             self.set_viewport(0, width, 0, height)
 
-        #ERROR
+        # ERROR
         if (self.combate == True):
             if key == arcade.key.KEY_1:      pass
             if key == arcade.key.KEY_2:      pass
             if key == arcade.key.KEY_3:
                 self.cambio = True
             if key == arcade.key.KEY_4:      pass
-        #ERROR
+        # ERROR
         if (self.combate == True and self.cambio == True):
             if key == arcade.key.KEY_1:
                 cambiar_pokemon(self.jugador, 1)
@@ -277,18 +311,17 @@ class MyGame(arcade.Window):
             if key == arcade.key.KEY_4:
                 cambiar_pokemon(self.jugador, 4)
                 self.cambio = False
-        #ERROR??
+        # ERROR Falta meter los mensajes para cuando no hay dinero y se ha comprado un producto
         if (self.tienda == True):
-            if key == arcade.key.KEY_1:
-                self.jugador.restar_dinero()
+            if key == arcade.key.KEY_1 and self.jugador.dinero <50 :
+                self.jugador.restar_dinero(50)
                 self.jugador.inventario["Poción"] += 1
-            if key == arcade.key.KEY_2:
-                self.jugador.restar_dinero()
+            if key == arcade.key.KEY_2 and self.jugador.dinero <50:
+                self.jugador.restar_dinero(50)
                 self.jugador.inventario["Cuerda huida"] += 1
 
-        if key == arcade.key.Q and self.current_room !=0 and self.jugador.inventario["Cuerda Huida"]!=0:
+        if key == arcade.key.Q and self.current_room != 0 and self.jugador.inventario["Cuerda Huida"] != 0:
             self.cuerda_huida = True
-
 
     def on_key_release(self, key, modifiers):
         if key == arcade.key.W or key == arcade.key.S:
@@ -296,8 +329,6 @@ class MyGame(arcade.Window):
 
         elif key == arcade.key.A or key == arcade.key.D:
             self.player_sprite.change_x = 0
-
-
 
     def on_update(self, delta_time):
         # Call update on all sprites (The sprites don't do much in this example though.)
@@ -331,15 +362,11 @@ class MyGame(arcade.Window):
                                                              self.rooms[self.current_room].wall_list)
             self.player_sprite.center_x = 300
             self.player_sprite.center_y = 55
-            arcade.draw_text("Nombre Pokemon1 + LVL", 534, 253, arcade.color.BLACK, 12)
-            arcade.draw_text("HP Pokemon1", 534, 223, arcade.color.BLACK, 12)
-            arcade.draw_text("Nombre Pokemon1", 300, 550, arcade.color.BLACK, 12)
-            arcade.draw_text("HP Pokemon2", 300, 521.5, arcade.color.BLACK, 12)
             self.player_sprite.center_x = 400
             self.player_sprite.center_y = 55
 
-        #Sistema para regresar al pueblo con cuerda huida
-        if(self.cuerda_huida ):
+        # Sistema para regresar al pueblo con cuerda huida
+        if (self.cuerda_huida):
             self.jugador.inventario["Cuerda Huida"] -= 1
             self.cuerda_huida = False
             self.current_room = 0
@@ -347,6 +374,33 @@ class MyGame(arcade.Window):
                                                              self.rooms[self.current_room].wall_list)
             self.player_sprite.center_x = 70
             self.player_sprite.center_y = 537.5
+
+        #Sistema de tiendas
+        if (self.current_room == 0 and self.player_sprite.center_x == 745 and self.player_sprite.center_y == 649.5):
+            self.tienda = True
+
+        # Sistema para restaurar HP de todos los fakemon
+        if (self.current_room == 0 and self.player_sprite.center_x == 471 and self.player_sprite.center_y == 681.5):
+            if self.top_rooom == 1:
+                self.jugador.lista_equipo[0].sumar_HP(999999)
+            elif self.top_rooom == 2:
+                for i in range(0, 1):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 3:
+                for i in range(0, 2):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 4:
+                for i in range(0, 3):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 5:
+                for i in range(0, 4):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 6:
+                for i in range(0, 5):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 7:
+                for i in range(0, 6):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
 
         ############## TURNO VS POKEMON ##############
 
@@ -363,15 +417,15 @@ class MyGame(arcade.Window):
 
                 # # POCION # #
                 elif accion == 2:
-                    self.jugador.lista_equipo[0].HP = pocion( self.jugador.lista_equipo[0].HP,
-                                                              self.jugador.lista_equipo[0].HP_MAX)
+                    self.jugador.lista_equipo[0].HP = pocion(self.jugador.lista_equipo[0].HP,
+                                                             self.jugador.lista_equipo[0].HP_MAX)
 
 
                 # # CUERDA HUIDA # #
                 elif accion == 4:
 
                     # Si tiene en el inventario
-                    if  self.jugador.inventario["Cuerda Huida"] > 0:
+                    if self.jugador.inventario["Cuerda Huida"] > 0:
 
                         # Si consigue huir
                         if huir():
@@ -381,8 +435,8 @@ class MyGame(arcade.Window):
                 # #  ATACAR # #
                 elif accion == 1:
 
-                    pokemon.HP = atacar( self.jugador.lista_equipo[0].tipo, pokemon.tipo, pokemon.HP, pokemon.HP_MAX,
-                                         self.jugador.lista_equipo[0].ataque)
+                    pokemon.HP = atacar(self.jugador.lista_equipo[0].tipo, pokemon.tipo, pokemon.HP, pokemon.HP_MAX,
+                                        self.jugador.lista_equipo[0].ataque)
                     return False  # Salir del bucle
 
         ############## TURNO VS ENTRENADOR ##############
@@ -400,7 +454,8 @@ class MyGame(arcade.Window):
 
                 # # POCION # #
                 elif accion == 2:
-                    entrenador.lista_equipo[0].HP = pocion(entrenador.lista_equipo[0].HP,entrenador.lista_equipo[0].HP_MAX)
+                    entrenador.lista_equipo[0].HP = pocion(entrenador.lista_equipo[0].HP,
+                                                           entrenador.lista_equipo[0].HP_MAX)
 
 
                 # # CUERDA HUIDA # #
@@ -497,10 +552,11 @@ class MyGame(arcade.Window):
 
                 # Ataque enemigo
                 if rival.lista_equipo[0].HP != 0:
-                    self.jugador.lista_equipo[0].HP = atacar(rival.lista_equipo[0].tipo, self.jugador.lista_equipo[0].tipo,
-                                                           self.jugador.lista_equipo[0].HP,
-                                                           self.jugador.lista_equipo[0].HP_MAX,
-                                                           rival.lista_equipo[0].ataque)
+                    self.jugador.lista_equipo[0].HP = atacar(rival.lista_equipo[0].tipo,
+                                                             self.jugador.lista_equipo[0].tipo,
+                                                             self.jugador.lista_equipo[0].HP,
+                                                             self.jugador.lista_equipo[0].HP_MAX,
+                                                             rival.lista_equipo[0].ataque)
 
                 # Ganar el combate
                 elif rival.lista_equipo[0].HP == 0:
@@ -514,8 +570,8 @@ class MyGame(arcade.Window):
                     # No quedan enemigos vivos
                     else:
                         self.jugador.lista_equipo[0].contador_exp = exp(self.jugador.lista_equipo[0].contador_exp,
-                                                                      self.jugador.lista_equipo[0].nivel,
-                                                                      rival.lista_equipo[0].nivel)
+                                                                        self.jugador.lista_equipo[0].nivel,
+                                                                        rival.lista_equipo[0].nivel)
                         # Volver a la habitacion anterior
                         self.current_room = room_anterior
                         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
@@ -556,7 +612,6 @@ class MyGame(arcade.Window):
 
                         # Volver a la habitacion inicial
                         self.current_room = 1
-
 
                         # Coordenadas iniciales
                         self.player_sprite.center_x = 840
@@ -857,6 +912,45 @@ class MyGame(arcade.Window):
                                 WIDTH + self.view_left,
                                 self.view_bottom,
                                 HEIGHT + self.view_bottom)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def main():

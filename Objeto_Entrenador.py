@@ -4,7 +4,7 @@ class Entrenador:
         # String
         self.nombre = nombre
         # Int
-        self.dinero = 0
+        self.dinero = 100
         # Diccionario String-->Int
         self.inventario = {"Poción":0,"Cuerda Huida":1}
         # Lista de objetos Pokemon

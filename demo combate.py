@@ -330,85 +330,28 @@ class MyGame(arcade.Window):
         elif key == arcade.key.A or key == arcade.key.D:
             self.player_sprite.change_x = 0
 
+
+
+
     def on_update(self, delta_time):
         # Call update on all sprites (The sprites don't do much in this example though.)
         self.player_list.update()
         self.player_list.update_animation()
         self.physics_engine.update()
 
-        # Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
-        if (self.current_room > self.top_rooom and self.current_room != 10):
-            self.top_rooom = self.current_room
-        # Carga el piso donde se encontraba el jugador por ultima vez
-        if (self.current_room == 0 and self.player_sprite.center_x == 843 and self.player_sprite.center_y == 137.5):
-            self.current_room = self.top_rooom
-            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
-                                                             self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = 165
-            self.player_sprite.center_y = 465
 
-        # Carga el piso del pueblo al salir del primer piso
-        if (self.current_room == 1 and self.player_sprite.center_x == 169 and self.player_sprite.center_y == 470.5):
-            self.current_room = 0
-            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
-                                                             self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = 840
-            self.player_sprite.center_y = 120
 
-        # Prueba combate
-        if (self.current_room == 1 and self.player_sprite.center_x == 873 and self.player_sprite.center_y == 425.5):
-            self.current_room = 2
-            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
-                                                             self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = 300
-            self.player_sprite.center_y = 55
-            self.player_sprite.center_x = 400
-            self.player_sprite.center_y = 55
-
-        # Sistema para regresar al pueblo con cuerda huida
-        if (self.cuerda_huida):
-            self.jugador.inventario["Cuerda Huida"] -= 1
-            self.cuerda_huida = False
-            self.current_room = 0
-            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
-                                                             self.rooms[self.current_room].wall_list)
-            self.player_sprite.center_x = 70
-            self.player_sprite.center_y = 537.5
-
-        #Sistema de tiendas
-        if (self.current_room == 0 and self.player_sprite.center_x == 745 and self.player_sprite.center_y == 649.5):
-            self.tienda = True
-
-        # Sistema para restaurar HP de todos los fakemon
-        if (self.current_room == 0 and self.player_sprite.center_x == 471 and self.player_sprite.center_y == 681.5):
-            if self.top_rooom == 1:
-                self.jugador.lista_equipo[0].sumar_HP(999999)
-            elif self.top_rooom == 2:
-                for i in range(0, 1):
-                    self.jugador.lista_equipo[i].sumar_HP(999999)
-            elif self.top_rooom == 3:
-                for i in range(0, 2):
-                    self.jugador.lista_equipo[i].sumar_HP(999999)
-            elif self.top_rooom == 4:
-                for i in range(0, 3):
-                    self.jugador.lista_equipo[i].sumar_HP(999999)
-            elif self.top_rooom == 5:
-                for i in range(0, 4):
-                    self.jugador.lista_equipo[i].sumar_HP(999999)
-            elif self.top_rooom == 6:
-                for i in range(0, 5):
-                    self.jugador.lista_equipo[i].sumar_HP(999999)
-            elif self.top_rooom == 7:
-                for i in range(0, 6):
-                    self.jugador.lista_equipo[i].sumar_HP(999999)
 
         ############## TURNO VS POKEMON ##############
 
-        def turno_aliado(pokemon, accion):
+        def turno_aliado_p(pokemon, accion):
             while True:
 
                 # # CAMBIAR # #
                 if accion == 3:
+
+                    print ("cambiar")
+
                     cambio = True
                     while not cambio:
                         num = 0
@@ -420,15 +363,22 @@ class MyGame(arcade.Window):
                     self.jugador.lista_equipo[0].HP = pocion(self.jugador.lista_equipo[0].HP,
                                                              self.jugador.lista_equipo[0].HP_MAX)
 
+                    print ("cambiar, vida:", self.jugador.lista_equipo[0].HP)
+
 
                 # # CUERDA HUIDA # #
                 elif accion == 4:
+
+                    print("Cuerda huida")
 
                     # Si tiene en el inventario
                     if self.jugador.inventario["Cuerda Huida"] > 0:
 
                         # Si consigue huir
                         if huir():
+
+                            print ("Consigue huir")
+
                             return True  # Salir del bucle
 
 
@@ -437,12 +387,17 @@ class MyGame(arcade.Window):
 
                     pokemon.HP = atacar(self.jugador.lista_equipo[0].tipo, pokemon.tipo, pokemon.HP, pokemon.HP_MAX,
                                         self.jugador.lista_equipo[0].ataque)
+
+                    print("ataque vida_anemigo: ", pokemon.HP )
+
                     return False  # Salir del bucle
 
         ############## TURNO VS ENTRENADOR ##############
 
         def turno_aliado(entrenador, rival, accion):
-            while True:
+            while self.combate:
+
+                print ("Turno aliado")
 
                 # # CAMBIAR # #
                 if accion == 3:
@@ -479,19 +434,33 @@ class MyGame(arcade.Window):
 
         ############## COMBATE VS POKEMON ##############
 
-        def combate(entrenador, pokemon, accion, room_anterior, x_anterior, y_anterior):
+        def combate_p( pokemon, accion, room_anterior, x_anterior, y_anterior):
             # Bucle principal
-            while self.combate:
+
+            print ("Antes del bucle")
+
+            entrenador = self.jugador
+
+            while True:
+
+                print ("Entra en self.combate")
 
                 # Ataque enemigo
                 if pokemon.HP != 0:
+
                     entrenador.lista_equipo[0].HP = atacar(pokemon.tipo, entrenador.lista_equipo[0].tipo,
                                                            entrenador.lista_equipo[0].HP,
                                                            entrenador.lista_equipo[0].HP_MAX,
                                                            pokemon.ataque)
 
+                    print("Ataque enemigo, pokemon en uso: ", entrenador.lista_equipo[0].nombre, " vida: ", entrenador.lista_equipo[0].HP)
+
+
                 # Gana el combate
                 elif pokemon.HP == 0:
+
+                    print ("Has ganado")
+
                     entrenador.lista_equipo[0].contador_exp = exp(entrenador.lista_equipo[0].contador_exp,
                                                                   entrenador.lista_equipo[0].nivel, pokemon.nivel)
 
@@ -506,7 +475,9 @@ class MyGame(arcade.Window):
                 # Si el aliado sigue con vida
                 if entrenador.lista_equipo[0].HP != 0:
 
-                    if turno_aliado(entrenador, pokemon, accion):
+                    print ("Turno aliado")
+
+                    if turno_aliado_p(pokemon, accion):
 
                         # Volver a la habitacion anterior
                         self.current_room = room_anterior
@@ -523,6 +494,8 @@ class MyGame(arcade.Window):
                 # Si el aliado no sigue con vida
                 elif entrenador.lista_equipo[0].HP == 0:
 
+                    print ("Aliado muerto")
+
                     # Retirar al pokemon
                     entrenador.lista_muertos.append(entrenador.lista_equipo[0])  # Meter en la lista de muertos
                     entrenador.lista_equipo.pop(entrenador.lista_equipo[0])  # Retirar del equipo de aliado
@@ -534,6 +507,8 @@ class MyGame(arcade.Window):
 
                     # No quedan aliados vivos
                     else:
+
+                        print("Has perdido")
 
                         # Volver a la habitacion inicial
                         self.current_room = 1
@@ -878,6 +853,106 @@ class MyGame(arcade.Window):
                 else:
                     return hp_total - ataque
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
+        if (self.current_room > self.top_rooom and self.current_room != 10):
+            self.top_rooom = self.current_room
+        # Carga el piso donde se encontraba el jugador por ultima vez
+        if (self.current_room == 0 and self.player_sprite.center_x == 843 and self.player_sprite.center_y == 137.5):
+            self.current_room = self.top_rooom
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 165
+            self.player_sprite.center_y = 465
+
+        # Carga el piso del pueblo al salir del primer piso
+        if (self.current_room == 1 and self.player_sprite.center_x == 169 and self.player_sprite.center_y == 470.5):
+            self.current_room = 0
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 840
+            self.player_sprite.center_y = 120
+
+
+
+        # Prueba combate
+        if (self.current_room == 1 and self.player_sprite.center_x == 873 and self.player_sprite.center_y == 425.5):
+            self.current_room = 2
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 300
+            self.player_sprite.center_y = 55
+            self.player_sprite.center_x = 400
+            self.player_sprite.center_y = 55
+
+
+            pokemon = Objeto_Pokemon.Pokemon("pokemon","volcanico",1,150,50,10,10)
+            pokemon2 = Objeto_Pokemon.Pokemon("pokemon2", "demoniaco", 1, 150, 50, 10, 10)
+
+            self.jugador.nuevo_pokemon(pokemon2)
+
+            print ("vida pokemon 2: ", pokemon2.HP)
+            print ("lista pokemons: ", self.jugador.lista_equipo)
+
+
+            combate_p(pokemon, self.key, self.current_room, self.player_sprite.center_x, self.player_sprite.center_y)
+
+
+
+
+
+
+        # Sistema para regresar al pueblo con cuerda huida
+        if (self.cuerda_huida):
+            self.jugador.inventario["Cuerda Huida"] -= 1
+            self.cuerda_huida = False
+            self.current_room = 0
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.player_sprite.center_x = 70
+            self.player_sprite.center_y = 537.5
+
+        #Sistema de tiendas
+        if (self.current_room == 0 and self.player_sprite.center_x == 745 and self.player_sprite.center_y == 649.5):
+            self.tienda = True
+
+        # Sistema para restaurar HP de todos los fakemon
+        if (self.current_room == 0 and self.player_sprite.center_x == 471 and self.player_sprite.center_y == 681.5):
+            if self.top_rooom == 1:
+                self.jugador.lista_equipo[0].sumar_HP(999999)
+            elif self.top_rooom == 2:
+                for i in range(0, 1):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 3:
+                for i in range(0, 2):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 4:
+                for i in range(0, 3):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 5:
+                for i in range(0, 4):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 6:
+                for i in range(0, 5):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+            elif self.top_rooom == 7:
+                for i in range(0, 6):
+                    self.jugador.lista_equipo[i].sumar_HP(999999)
+
+
         # Sistema de camara para jugador
         changed = False
         # Scroll left
@@ -912,6 +987,10 @@ class MyGame(arcade.Window):
                                 WIDTH + self.view_left,
                                 self.view_bottom,
                                 HEIGHT + self.view_bottom)
+
+
+
+
 
 
 

@@ -311,7 +311,7 @@ class MyGame(arcade.Window):
                 print("Aliado ataca enemigo")
                 print("HP enemigo:"+  str(self.current_enemy.HP))
                 print("HP aliado:" + str(self.current_ally.HP))
-                Combate.checkeo(self.current_ally,self.current_enemy,1,180,300)
+
             if key == arcade.key.KEY_2:      pass
             if key == arcade.key.KEY_3:      pass
 

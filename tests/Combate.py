@@ -1,7 +1,7 @@
 import random
 
 def atacar(atacante, defensor):
-    print("Hola1")
+
     if atacante.tipo == "demonio":
         if defensor.tipo == "demonio":  # demonio vs demonio
             defensor.HP -= (atacante.ataque - defensor.defensa)
@@ -66,7 +66,7 @@ def atacar(atacante, defensor):
             defensor.HP -= (atacante.ataque - defensor.defensa)
 
     if atacante.tipo  == "estelar":
-        print("Hola2")
+
         if defensor.tipo == "demonio":  # estelar vs demonio
 
             defensor.HP -= (atacante.ataque - defensor.defensa) * 1.5
@@ -78,13 +78,14 @@ def atacar(atacante, defensor):
             defensor.HP -= (atacante.ataque - defensor.defensa) * 0.5
 
         elif defensor.tipo == "estelar":  # estelar vs  estelar
+
             defensor.HP -= (atacante.ataque - defensor.defensa)
 
         elif defensor.tipo == "vacio":  # estelar vs vacio
             defensor.HP -= (atacante.ataque - defensor.defensa) * 0.5
 
         elif defensor.tipo == "lunar":  # estelar vs  lunar
-            print("Hola3")
+
             defensor.HP -= (atacante.ataque - defensor.defensa) * 1.5
 
     if atacante.tipo  == "vacio":

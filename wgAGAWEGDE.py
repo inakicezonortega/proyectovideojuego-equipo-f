@@ -230,6 +230,9 @@ class MyGame(arcade.Window):
         self.player_list.append(self.player_sprite)
 
         #Sistema de habitaciones
+        self.has_perdido = False
+        self.has_ganado = False
+
         self.top_rooom = 1
         self.current_room = 0
         self.rooms = []
@@ -243,8 +246,8 @@ class MyGame(arcade.Window):
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
 
         ###################Registro de fakemon################################
-        prueba1 = Objeto_Pokemon.Pokemon("prueba1","estelar",30,20,200,200,200,"")
-        prueba2 = Objeto_Pokemon.Pokemon("prueba2","estelar",30,20,3,200,200,"")
+        prueba1 = Objeto_Pokemon.Pokemon("prueba1","estelar",30,20,3,200,200,"")
+        prueba2 = Objeto_Pokemon.Pokemon("prueba2","estelar",30,20,200,200,200,"")
 
         ###################Registro de entrenadores################################
         self.jugador = Objeto_Entrenador.Entrenador("jugador")
@@ -307,17 +310,20 @@ class MyGame(arcade.Window):
         # ERROR
         if (self.current_room == 2 ):
             if key == arcade.key.KEY_1:
-                Combate.atacar(self.current_ally,self.current_enemy)
-                print("Aliado ataca enemigo")
-                print("HP enemigo:"+  str(self.current_enemy.HP))
-                print("HP aliado:" + str(self.current_ally.HP))
-            if key == arcade.key.KEY_2:
-                if(self.jugador.inventario["Pocion"]>0 and self.current_ally.HP<self.current_ally.HP_MAX):
-                    self.current_ally.HP = int(self.current_ally.HP*1.5)
-                    if(self.current_ally.HP>self.current_ally.HP_MAX):
-                        self.current_ally.HP = self.current_ally.HP_MAX
-                    self.jugador.inventario["Pocion"] -= 1
 
+                self.room_victoria = self.current_room
+                self.x_victoria = self.player_sprite.center_x
+                self.y_victoria = self.player_sprite.center_y
+
+
+                Combate.atacar(self.current_enemy,self.current_ally)
+                print("Aliado ataca enemigo")
+                print("HP enemigo:"+ str(self.current_enemy.HP))
+                print("HP aliado:" + str(self.current_ally.HP))
+                self.has_perdido, self.has_ganado = Combate.checkeo(self.jugador, self.current_ally,self.current_enemy)
+
+
+            if key == arcade.key.KEY_2:      pass
             if key == arcade.key.KEY_3:      pass
 
             if key == arcade.key.KEY_4:      pass
@@ -363,7 +369,28 @@ class MyGame(arcade.Window):
         self.player_list.update_animation()
         self.physics_engine.update()
 
-         # Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
+        #Volver si has ganado
+        if self.has_ganado:
+
+            self.current_room = self.room_victoria
+            self.player_sprite.center_x = self.x_victoria
+            self.player_sprite.center_y = self.y_victoria
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.has_ganado = False
+
+
+        #Volver al inicio
+        if self.has_perdido:
+
+            self.current_room = 0
+            self.player_sprite.center_x = 840
+            self.player_sprite.center_y = 120
+            self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
+                                                             self.rooms[self.current_room].wall_list)
+            self.has_perdido = False
+
+        # Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
         if (self.current_room > self.top_rooom and self.current_room != 10):
             self.top_rooom = self.current_room
         # Carga el piso donde se encontraba el jugador por ultima vez

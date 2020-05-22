@@ -1,8 +1,8 @@
-import arcade
 import os
+import arcade
 import Objeto_Entrenador
 import Objeto_Pokemon
-import random
+from tests import Combate
 from tests.Cambiar_Pokemon import cambiar_pokemon
 
 WIDTH = 800
@@ -125,7 +125,7 @@ class MyGame(arcade.Window):
         # Variables globales para los principales procesos del juego
         self.tienda = False
         self.cambio = False
-        self.combate = False
+        self.is_salvaje = False
         self.cuerda_huida = False
 
 
@@ -229,6 +229,7 @@ class MyGame(arcade.Window):
 
         self.player_list.append(self.player_sprite)
 
+        #Sistema de habitaciones
         self.top_rooom = 1
         self.current_room = 0
         self.rooms = []
@@ -241,7 +242,20 @@ class MyGame(arcade.Window):
         self.rooms.append(room)
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
 
+        ###################Registro de fakemon################################
+        prueba1 = Objeto_Pokemon.Pokemon("prueba1","estelar",30,20,200,200,200,"")
+        prueba2 = Objeto_Pokemon.Pokemon("prueba2","estelar",30,20,3,200,200,"")
+
+        ###################Registro de entrenadores################################
         self.jugador = Objeto_Entrenador.Entrenador("jugador")
+        self.jugador.lista_equipo.append(prueba1)
+
+
+        #Establecemos dos variables globales para el combate
+        self.current_enemy = prueba2
+        self.current_ally = self.jugador.lista_equipo[0]
+
+
 
     # Esta funcion recibe el texto dentro de los sprites y dibuja el cuadro de texto
     def genera_texto(self, text):
@@ -291,11 +305,16 @@ class MyGame(arcade.Window):
             self.set_viewport(0, width, 0, height)
 
         # ERROR
-        if (self.combate == True):
-            if key == arcade.key.KEY_1:      pass
+        if (self.current_room == 2 ):
+            if key == arcade.key.KEY_1:
+                Combate.atacar(self.current_ally,self.current_enemy)
+                print("Aliado ataca enemigo")
+                print("HP enemigo:"+  str(self.current_enemy.HP))
+                print("HP aliado:" + str(self.current_ally.HP))
+                Combate.checkeo(self.current_ally,self.current_enemy,1,180,300)
             if key == arcade.key.KEY_2:      pass
-            if key == arcade.key.KEY_3:
-                self.cambio = True
+            if key == arcade.key.KEY_3:      pass
+
             if key == arcade.key.KEY_4:      pass
         # ERROR
         if (self.combate == True and self.cambio == True):
@@ -339,535 +358,7 @@ class MyGame(arcade.Window):
         self.player_list.update_animation()
         self.physics_engine.update()
 
-
-
-
-        ############## TURNO VS POKEMON ##############
-
-        def turno_aliado_p(pokemon, accion):
-            while True:
-
-                # # CAMBIAR # #
-                if accion == 3:
-
-                    print ("cambiar")
-
-                    cambio = True
-                    while not cambio:
-                        num = 0
-                        num += 1
-
-
-                # # POCION # #
-                elif accion == 2:
-                    self.jugador.lista_equipo[0].HP = pocion(self.jugador.lista_equipo[0].HP,
-                                                             self.jugador.lista_equipo[0].HP_MAX)
-
-                    print ("cambiar, vida:", self.jugador.lista_equipo[0].HP)
-
-
-                # # CUERDA HUIDA # #
-                elif accion == 4:
-
-                    print("Cuerda huida")
-
-                    # Si tiene en el inventario
-                    if self.jugador.inventario["Cuerda Huida"] > 0:
-
-                        # Si consigue huir
-                        if huir():
-
-                            print ("Consigue huir")
-
-                            return True  # Salir del bucle
-
-
-                # #  ATACAR # #
-                elif accion == 1:
-
-                    pokemon.HP = atacar(self.jugador.lista_equipo[0].tipo, pokemon.tipo, pokemon.HP, pokemon.HP_MAX,
-                                        self.jugador.lista_equipo[0].ataque)
-
-                    print("ataque vida_anemigo: ", pokemon.HP )
-
-                    return False  # Salir del bucle
-
-        ############## TURNO VS ENTRENADOR ##############
-
-        def turno_aliado(entrenador, rival, accion):
-            while self.combate:
-
-                print ("Turno aliado")
-
-                # # CAMBIAR # #
-                if accion == 3:
-                    cambio = True
-                    while not cambio:
-                        num = 0
-                        num += 1
-
-
-                # # POCION # #
-                elif accion == 2:
-                    entrenador.lista_equipo[0].HP = pocion(entrenador.lista_equipo[0].HP,
-                                                           entrenador.lista_equipo[0].HP_MAX)
-
-
-                # # CUERDA HUIDA # #
-                elif accion == 4:
-
-                    # Si tiene en el inventario
-                    if entrenador.inventario["Cuerda Huida"] > 0:
-
-                        # Si consigue huir
-                        if huir(entrenador):
-                            return True  # Salir del bucle
-
-
-                # #  ATACAR # #
-                elif accion == 1:
-
-                    rival.lista_equipo[0].HP = atacar(entrenador.lista_equipo[0].tipo, rival.lista_equipo[0].tipo,
-                                                      rival.lista_equipo[0].HP, rival.lista_equipo[0].HP_MAX,
-                                                      entrenador.lista_equipo[0].ataque)
-                    return False  # Salir del bucle
-
-        ############## COMBATE VS POKEMON ##############
-
-        def combate_p( pokemon, accion, room_anterior, x_anterior, y_anterior):
-            # Bucle principal
-
-            print ("Antes del bucle")
-
-            entrenador = self.jugador
-
-            while True:
-
-                print ("Entra en self.combate")
-
-                # Ataque enemigo
-                if pokemon.HP != 0:
-
-                    entrenador.lista_equipo[0].HP = atacar(pokemon.tipo, entrenador.lista_equipo[0].tipo,
-                                                           entrenador.lista_equipo[0].HP,
-                                                           entrenador.lista_equipo[0].HP_MAX,
-                                                           pokemon.ataque)
-
-                    print("Ataque enemigo, pokemon en uso: ", entrenador.lista_equipo[0].nombre, " vida: ", entrenador.lista_equipo[0].HP)
-
-
-                # Gana el combate
-                elif pokemon.HP == 0:
-
-                    print ("Has ganado")
-
-                    entrenador.lista_equipo[0].contador_exp = exp(entrenador.lista_equipo[0].contador_exp,
-                                                                  entrenador.lista_equipo[0].nivel, pokemon.nivel)
-
-                    # Volver a la habitacion anterior
-                    self.current_room = room_anterior
-
-                    # Coordenadas anteriores
-                    self.player_sprite.center_x = x_anterior
-                    self.player_sprite.center_y = y_anterior
-                    break
-
-                # Si el aliado sigue con vida
-                if entrenador.lista_equipo[0].HP != 0:
-
-                    print ("Turno aliado")
-
-                    if turno_aliado_p(pokemon, accion):
-
-                        # Volver a la habitacion anterior
-                        self.current_room = room_anterior
-
-                        # Coordenadas anteriores
-                        self.player_sprite.center_x = x_anterior
-                        self.player_sprite.center_y = y_anterior
-
-                        break  # Si ha huido
-                    else:
-                        continue  # Si no ha huido
-
-
-                # Si el aliado no sigue con vida
-                elif entrenador.lista_equipo[0].HP == 0:
-
-                    print ("Aliado muerto")
-
-                    # Retirar al pokemon
-                    entrenador.lista_muertos.append(entrenador.lista_equipo[0])  # Meter en la lista de muertos
-                    entrenador.lista_equipo.pop(entrenador.lista_equipo[0])  # Retirar del equipo de aliado
-
-                    # Si quedan aliados vivos
-                    if len(entrenador.lista_equipo[0] != 0):
-
-                        turno_aliado(entrenador, pokemon, accion)
-
-                    # No quedan aliados vivos
-                    else:
-
-                        print("Has perdido")
-
-                        # Volver a la habitacion inicial
-                        self.current_room = 1
-
-                        # Coordenadas iniciales
-                        self.player_sprite.center_x = 840
-                        self.player_sprite.center_y = 120
-
-                        break
-
-        ############## COMBATE VS ENTRENADOR ##############
-
-        def combate(rival, accion, room_anterior, x_anterior, y_anterior):
-            # Bucle principal
-            while self.combate:
-
-                # Ataque enemigo
-                if rival.lista_equipo[0].HP != 0:
-                    self.jugador.lista_equipo[0].HP = atacar(rival.lista_equipo[0].tipo,
-                                                             self.jugador.lista_equipo[0].tipo,
-                                                             self.jugador.lista_equipo[0].HP,
-                                                             self.jugador.lista_equipo[0].HP_MAX,
-                                                             rival.lista_equipo[0].ataque)
-
-                # Ganar el combate
-                elif rival.lista_equipo[0].HP == 0:
-
-                    # Si quedan enemigos vivos, cambiar el que combate
-                    if len(rival.lista_equipo[0] != 0):
-                        rival.lista_muertos.append(rival.lista_equipo[0])  # Añado a la lista de muertos
-                        rival.lista_equipo.pop(0)  # Retirara de disponibles
-
-
-                    # No quedan enemigos vivos
-                    else:
-                        self.jugador.lista_equipo[0].contador_exp = exp(self.jugador.lista_equipo[0].contador_exp,
-                                                                        self.jugador.lista_equipo[0].nivel,
-                                                                        rival.lista_equipo[0].nivel)
-                        # Volver a la habitacion anterior
-                        self.current_room = room_anterior
-                        self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite,
-                                                                         self.rooms[self.current_room].wall_list)
-                        # Coordenadas anteriores
-                        self.player_sprite.center_x = x_anterior
-                        self.player_sprite.center_y = y_anterior
-                        break
-
-                # Si el aliado sigue con vida
-                if self.jugador.lista_equipo[0].HP != 0:
-
-                    if turno_aliado(self.jugador, rival, accion):
-                        break  # Si ha huido
-                    else:
-                        continue  # Si no ha huido
-
-
-                # Si el aliado no sigue con vida
-                elif self.jugador.lista_equipo[0].HP == 0:
-
-                    # Retirar al pokemon
-                    self.jugador.lista_muertos.append(self.jugador.lista_equipo[0])  # Meter en la lista de muertos
-                    self.jugador.lista_equipo.pop(self.jugador.lista_equipo[0])  # Retirar del equipo de aliado
-
-                    # Si quedan aliados vivos
-                    if len(self.jugador.lista_equipo[0] != 0):
-
-                        turno_aliado(self.jugador, rival, accion)
-
-                    # No quedan aliados vivos
-                    else:
-                        # Pierdes el combate, los pokemon enemigos vuelven a su estado inicial
-                        for pokemon_muerto in rival.lista_muertos:
-                            pokemon_muerto.HP = pokemon_muerto.HP_MAX  # Cura al pokemon
-                            rival.lista_equipo.append(pokemon_muerto)  # Lo añade a los disponibles
-                            rival.lista_muertos.pop(pokemon_muerto)  # Lo retira de lista de muertos
-
-                        # Volver a la habitacion inicial
-                        self.current_room = 1
-
-                        # Coordenadas iniciales
-                        self.player_sprite.center_x = 840
-                        self.player_sprite.center_y = 120
-
-                        break  # Termina el combate
-
-        ############## FUNCIONES NECESARIAS PARA EL COMBATE ##############
-
-        def pocion(vida_aliado, vida_maxima):
-            if vida_aliado != vida_maxima and self.jugador.inventario["Pocion"] != 0:
-                self.jugador.inventario.pop("Pocion")
-                return vida_aliado * 1.5
-
-            else:
-                return vida_maxima
-
-        def exp(exp_actual, lvl_aliado, lvl_enemigo):
-            # Comprobador de diferencia de niveles entre aliado y enemigo
-            dif_nivel = lvl_aliado - lvl_enemigo
-            # si nivel aliado es mayor->dara menos exp
-            # si nivel aliado es menor->dara mas exp
-            # si los niveles son iguales->dara un numero base de exp
-            if dif_nivel == 0:
-                exp_actual = exp_actual + 8
-            elif dif_nivel > 0:
-                exp_actual = exp_actual + 5
-            elif dif_nivel < 0:
-                exp_actual = exp_actual + 13
-
-            return exp_actual
-
-        def huir():
-            x = random.randrange(9)  # Numeros del 0 al 9
-
-            self.jugador.lista_equipo["Cuerda Huida"] -= 1
-
-            # La cuerda huida tiene un 30% de probabilidades de acertar, por lo tanto si x es 0, 1 o 2 surtira efecto
-            if -1 < x < 3:
-                return True
-            else:
-                return False
-
-        def atacar(tipo_aliado, tipo_enemigo, hp_enemigo, hp_total, ataque):
-            if tipo_aliado == "demonio":
-                if tipo_enemigo == "demonio":  # demonio vs demonio
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-                elif tipo_enemigo == "cometa":  # demonio vs cometa
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-                elif tipo_enemigo == "volcanico":  # demonio vs volcanico
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-                elif tipo_enemigo == "estelar":  # demonio vs estelar
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-                elif tipo_enemigo == "vacio":  # demonio vs vacio
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-                elif tipo_enemigo == "lunar":  # demonio vs lunar
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-            elif tipo_aliado == "cometa":
-                if tipo_enemigo == "demonio":  # cometa vs demonio
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-                elif tipo_enemigo == "cometa":  # cometa vs cometa
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-                elif tipo_enemigo == "volcanico":  # cometa vs volcanico
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-                elif tipo_enemigo == "estelar":  # cometa vs estelar
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-                elif tipo_enemigo == "vacio":  # cometa vs vacio
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-                elif tipo_enemigo == "lunar":  # cometa vs lunar
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-            elif tipo_aliado == "volcanico":
-                if tipo_enemigo == "demonio":  # volcanico vs demonio
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-                elif tipo_enemigo == "cometa":  # volcanico vs cometa
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-                elif tipo_enemigo == "volcanico":  # volcanico vs volcanico
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-                elif tipo_enemigo == "estelar":  # volcanico vs estelar
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-                elif tipo_enemigo == "vacio":  # volcanico vs vacio
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-                elif tipo_enemigo == "lunar":  # volcanico vs lunar
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-            elif tipo_aliado == "estelar":
-                if tipo_enemigo == "demonio":  # estelar vs demonio
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-                elif tipo_enemigo == "cometa":  # estelar vs cometa
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-                elif tipo_enemigo == "volcanico":  # estelar vs volcanico
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-                elif tipo_enemigo == "estelar":  # estelar vs  estelar
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-                elif tipo_enemigo == "vacio":  # estelar vs vacio
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-                elif tipo_enemigo == "lunar":  # estelar vs  lunar
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-            elif tipo_aliado == "vacio":
-                if tipo_enemigo == "demonio":  # vacio vs demonio
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-                elif tipo_enemigo == "cometa":  # vacio vs cometa
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-                elif tipo_enemigo == "volcanico":  # vacio vs volcanico
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-                elif tipo_enemigo == "estelar":  # vacio vs estelar
-                    if hp_enemigo > hp_total - ataque * 1.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 1.5
-
-                elif tipo_enemigo == "vacio":  # vacio vs vacio
-                    if hp_enemigo > hp_total - ataque:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque
-
-                elif tipo_enemigo == "lunar":  # vacio vs lunar
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-            elif tipo_aliado == "lunar":
-                if tipo_enemigo == "demonio":  # lunar vs demonio
-                    if hp_enemigo > hp_total - ataque * 0.5:
-                        return hp_enemigo - 1
-                    else:
-                        return hp_total - ataque * 0.5
-
-            elif tipo_enemigo == "cometa":  # lunar vs cometa
-                if hp_enemigo > hp_total - ataque * 1.5:
-                    return hp_enemigo - 1
-                else:
-                    return hp_total - ataque * 1.5
-
-            elif tipo_enemigo == "volcanico":  # lunar vs volcanico
-                if hp_enemigo > hp_total - ataque:
-                    return hp_enemigo - 1
-                else:
-                    return hp_total - ataque
-
-            elif tipo_enemigo == "estelar":  # lunar vs estelar
-                if hp_enemigo > hp_total - ataque * 0.5:
-                    return hp_enemigo - 1
-                else:
-                    return hp_total - ataque * 0.5
-
-            elif tipo_enemigo == "vacio":  # lunar vs vacio
-                if hp_enemigo > hp_total - ataque * 1.5:
-                    return hp_enemigo - 1
-                else:
-                    return hp_total - ataque * 1.5
-
-            elif tipo_enemigo == "lunar":  # lunar vs lunar
-                if hp_enemigo > hp_total - ataque:
-                    return hp_enemigo - 1
-                else:
-                    return hp_total - ataque
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
+         # Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
         if (self.current_room > self.top_rooom and self.current_room != 10):
             self.top_rooom = self.current_room
         # Carga el piso donde se encontraba el jugador por ultima vez
@@ -897,19 +388,6 @@ class MyGame(arcade.Window):
             self.player_sprite.center_y = 55
             self.player_sprite.center_x = 400
             self.player_sprite.center_y = 55
-
-
-            pokemon = Objeto_Pokemon.Pokemon("pokemon","volcanico",1,150,50,10,10)
-            pokemon2 = Objeto_Pokemon.Pokemon("pokemon2", "demoniaco", 1, 150, 50, 10, 10)
-
-            self.jugador.nuevo_pokemon(pokemon2)
-
-            print ("vida pokemon 2: ", pokemon2.HP)
-            print ("lista pokemons: ", self.jugador.lista_equipo)
-
-
-            combate_p(pokemon, self.key, self.current_room, self.player_sprite.center_x, self.player_sprite.center_y)
-
 
 
 

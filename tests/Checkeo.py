@@ -17,8 +17,6 @@ def checkeo(aliado, enemigo, room_anterior, x_anterior, y_anterior):
         #Intentar cambiar pokemon
         if len(self.jugador.lista_equipo) != 0:
 
-            #Llamar cambiar pokemon
-            cambiar_pokemon()
             return True
 
         else:

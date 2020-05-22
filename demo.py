@@ -4,6 +4,7 @@ import Objeto_Entrenador
 import Objeto_Pokemon
 from tests import Combate
 from tests.Cambiar_Pokemon import cambiar_pokemon
+import random
 
 WIDTH = 800
 HEIGHT = 600
@@ -343,7 +344,18 @@ class MyGame(arcade.Window):
 
             if key == arcade.key.KEY_3:      pass
 
-            if key == arcade.key.KEY_4:      pass
+            if key == arcade.key.KEY_4:
+
+                #Si tiene cuerdas
+                if (self.jugador.inventario["Cuerda Huida"] > 0):
+
+                    x = random.randrange(9)  # Numeros del 0 al 9
+
+                    # La cuerda huida tiene un 30% de probabilidades de acertar, por lo tanto si x es 0, 1 o 2 surtira efecto
+                    if -1 < x < 3: self.cuerda_huida = True
+
+
+
 
         # ERROR Falta meter los mensajes para cuando no hay dinero y se ha comprado un producto
         if (self.tienda == True):
@@ -406,6 +418,8 @@ class MyGame(arcade.Window):
          # Sistema para comprobar el mayor de los pisos y cambiar al piso donde se encontraba el jugador cuando sale de la torre
         if (self.current_room > self.top_rooom and self.current_room != 10):
             self.top_rooom = self.current_room
+
+
         # Carga el piso donde se encontraba el jugador por ultima vez
         if (self.current_room == 0 and self.player_sprite.center_x == 843 and self.player_sprite.center_y == 137.5):
             self.current_room = self.top_rooom

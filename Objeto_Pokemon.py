@@ -18,16 +18,6 @@ class Pokemon:
         #String con el enlace al tipo de imagen del fakemon
         self.imagen = imagen
 
-    # Definimos las funciones principales relacionado con HP
-    def sumar_HP(self,cantidad):
-        self.HP +=cantidad
-        if self.HP>self.HP_MAX:
-            self.HP = self.HP_MAX
-    def restar_HP(self,cantidad):
-        self.HP -= cantidad
-        if self.HP<0:
-            self.HP = 0
-
     def subir_nivel(self):
         self.nivel +=1
         self.contador_exp = 0
@@ -36,16 +26,16 @@ class Pokemon:
             self.HP_MAX *= 1.205
             self.ataque *= 1.23
             self.defensa *= 1.27
-            self.sumar_HP(9999999)
+            self.HP = self.HP_MAX
             # Falta cuadro de texto indicando que pokemon ha subido de nivel
         #A partir de lvl 10 la suma de estadisticas es distintas(10-40)
         elif(10<self.nivel<=40):
             self.ataque += 3
             self.HP_MAX += 5
             self.defensa +=2
-            self.sumar_HP(9999999)
+            self.HP = self.HP_MAX
             #Falta cuadro de texto indicando que pokemon ha subido de nivel
         else:
-            self.sumar_HP(9999999)
+            self.HP = self.HP_MAX
             # Falta cuadro de texto indicando que pokemon ha subido de nivel máximo
 

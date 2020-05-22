@@ -245,8 +245,8 @@ class MyGame(arcade.Window):
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.rooms[self.current_room].wall_list)
 
         ###################Registro de fakemon################################
-        prueba1 = Objeto_Pokemon.Pokemon("prueba1","estelar",30,20,200,200,200,"")
-        prueba2 = Objeto_Pokemon.Pokemon("prueba2","estelar",30,20,3,20,20,"")
+        prueba1 = Objeto_Pokemon.Pokemon("prueba1","estelar",30,20,200,100,100,"")
+        prueba2 = Objeto_Pokemon.Pokemon("prueba2","estelar",30,20,200,200,200,"")
 
         ###################Registro de entrenadores################################
         self.jugador = Objeto_Entrenador.Entrenador("jugador")
@@ -279,10 +279,12 @@ class MyGame(arcade.Window):
         if (self.current_room == 0 and self.player_sprite.center_x == 745 and self.player_sprite.center_y == 649.5):
             self.genera_texto("cuadrado.png")
 
-        arcade.draw_text("Nombre Pokemon1 + LVL", 534, 253, arcade.color.BLACK, 12)
-        arcade.draw_text("HP Pokemon1", 534, 223, arcade.color.BLACK, 12)
-        arcade.draw_text("Nombre Pokemon1", 300, 530, arcade.color.BLACK, 12)
-        arcade.draw_text("HP Pokemon2", 300, 510, arcade.color.BLACK, 12)
+        #Sistema de texto dinamico para combates fakemon
+        if (self.current_room == 2):
+            arcade.draw_text(self.current_ally.nombre+"                                        "+str(self.current_ally.nivel), 534, 253, arcade.color.BLACK, 12)
+            arcade.draw_text(str(self.current_ally.HP)+"/"+str(self.current_ally.HP_MAX)+"                                        "+self.current_ally.tipo, 534, 223, arcade.color.BLACK, 12)
+            arcade.draw_text(self.current_enemy.nombre +"                                        "+ str(self.current_enemy.nivel) , 300, 530, arcade.color.BLACK, 12)
+            arcade.draw_text(str(self.current_enemy.HP)+"/"+str(self.current_enemy.HP_MAX)+"                                        "+self.current_enemy.tipo, 300, 510, arcade.color.BLACK, 12)
 
         # Mapa de coordenadas utilizado para saber la dirección
         arcade.draw_text("Coordenada x:" + str(self.player_sprite.center_x), self.player_sprite.center_x + 10,
@@ -342,7 +344,11 @@ class MyGame(arcade.Window):
                     print(str(self.has_ganado))
                     print(str(self.has_perdido))
 
-            if key == arcade.key.KEY_3:      pass
+            if key == arcade.key.KEY_3:
+                #Intercambia el fakemon del jugador actual por el siguiente en la lista
+                fakemon_antiguo =   self.jugador.lista_equipo[0]
+                self.jugador.lista_equipo.pop(0)
+                self.jugador.lista_equipo.append(fakemon_antiguo)
 
             if key == arcade.key.KEY_4:
 
@@ -353,6 +359,15 @@ class MyGame(arcade.Window):
 
                     # La cuerda huida tiene un 30% de probabilidades de acertar, por lo tanto si x es 0, 1 o 2 surtira efecto
                     if -1 < x < 3: self.cuerda_huida = True
+                    else:
+                        # Turno enemigo
+                        Combate.atacar(self.current_enemy, self.current_ally)
+                        print("HP enemigo:" + str(self.current_enemy.HP))
+                        print("HP aliado:" + str(self.current_ally.HP))
+                        self.has_perdido, self.has_ganado = Combate.checkeo(self.jugador, self.current_ally,
+                                                                            self.current_enemy)
+                        print(str(self.has_ganado))
+                        print(str(self.has_perdido))
 
 
 

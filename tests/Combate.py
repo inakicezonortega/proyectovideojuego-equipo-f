@@ -269,6 +269,9 @@ def checkeo(jugador, aliado, enemigo):
         #Gana el combate, ganar experienci y volver a la sala
         jugador.lista_equipo[0].contador_exp = exp(jugador.lista_equipo[0].contador_exp,
                                                       jugador.lista_equipo[0].nivel, enemigo.nivel)
+        if(jugador.lista_equipo[0].contador_exp>jugador.lista_equipo[0].exp_final):
+            jugador.lista_equipo[0]. subir_nivel()
+
 
         return False, True
 

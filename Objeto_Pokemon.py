@@ -11,7 +11,7 @@ class Pokemon:
         self.exp_final = exp_final
         #Puntos de vida INT
         self.HP_MAX = HP_MAX
-        self.HP = HP_MAX
+        self.HP = 100
         #Estadisticas daño y defensa INT
         self.ataque = ataque
         self.defensa = defensa

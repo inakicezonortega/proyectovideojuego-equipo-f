@@ -156,12 +156,12 @@ def huir():
         
 def checkeo(jugador, aliado, enemigo):
 
-    if aliado.HP != 0 and enemigo != 0:
+    if aliado.HP > 0 and enemigo.HP > 0:
 
         #El combate continua
         return False, False
 
-    elif aliado.HP == 0:
+    elif aliado.HP < 0:
 
         jugador.lista_muertos.append(jugador.lista_equipo[0])  # Meter en la lista de muertos
         jugador.lista_equipo.pop(0)  # Retirar del equipo de aliado
@@ -178,7 +178,7 @@ def checkeo(jugador, aliado, enemigo):
             return True, False
 
 
-    elif enemigo.HP == 0:
+    elif enemigo.HP < 0:
 
         #Gana el combate, ganar experienci y volver a la sala
         jugador.lista_equipo[0].contador_exp = exp(jugador.lista_equipo[0].contador_exp,

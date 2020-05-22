@@ -151,41 +151,37 @@ def huir():
     if -1 < x < 3:
         return True
     else:   False
+        
+        
+def checkeo(jugador, aliado, enemigo):
 
-def checkeo(aliado, enemigo, room_anterior, x_anterior, y_anterior):
-    if aliado.HP > 0 and enemigo.HP > 0:
-        print("Todo bien")
-        # El combate continua
+    if aliado.HP != 0 and enemigo != 0:
 
+        #El combate continua
+        return False, False
 
-    elif aliado.HP <= 0:
-        print("Todo mal")
-        self.jugador.lista_muertos.append(self.jugador.lista_equipo[0])  # Meter en la lista de muertos
-        self.jugador.lista_equipo.pop(self.jugador.lista_equipo[0])  # Retirar del equipo de aliado
+    elif aliado.HP == 0:
 
-        # Intentar cambiar pokemon
-        if len(self.jugador.lista_equipo) == 0:
+        jugador.lista_muertos.append(jugador.lista_equipo[0])  # Meter en la lista de muertos
+        jugador.lista_equipo.pop(0)  # Retirar del equipo de aliado
 
-            # Pierde el combate, volver al inicio
+        #Intentar cambiar pokemon
+        if len(jugador.lista_equipo) != 0:
+
+            return False, False
+
+        else:
+
+            #Pierde el combate, volver al inicio
             # Volver a la habitacion inicial
-            self.current_room = 1
-
-            # Coordenadas iniciales
-            self.player_sprite.center_x = 840
-            self.player_sprite.center_y = 120
+            return True, False
 
 
+    elif enemigo.HP == 0:
 
-    elif enemigo.HP <= 0:
-        print("Has ganado")
-        """""# Gana el combate, ganar experienci y volver a la sala
-        self.jugador.lista_equipo[0].contador_exp = exp(self.jugador.lista_equipo[0].contador_exp,
-                                                        self.jugador.lista_equipo[0].nivel, enemigo.nivel)
+        #Gana el combate, ganar experienci y volver a la sala
+        jugador.lista_equipo[0].contador_exp = exp(jugador.lista_equipo[0].contador_exp,
+                                                      jugador.lista_equipo[0].nivel, enemigo.nivel)
 
-        # Volver a la habitacion anterior
-        self.current_room = room_anterior
-
-        # Coordenadas anteriores
-        self.player_sprite.center_x = x_anterior
-        self.player_sprite.center_y = y_anterior"""
+        return False, True
 

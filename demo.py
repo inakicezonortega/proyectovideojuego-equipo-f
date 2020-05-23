@@ -275,9 +275,13 @@ class MyGame(arcade.Window):
 
         # Cuadros de texto correspondientes al pueblo
         if (self.current_room == 0 and self.player_sprite.center_x == 471 and self.player_sprite.center_y == 681.5):
-            self.genera_texto("cuadrado.png")
+            self.genera_texto("cuadrocentro.png")
         if (self.current_room == 0 and self.player_sprite.center_x == 745 and self.player_sprite.center_y == 649.5):
-            self.genera_texto("cuadrado.png")
+            self.genera_texto("cuadrotienda.png")
+        if (self.current_room == 0 and (self.player_sprite.center_x >= 271 and self.player_sprite.center_x <= 283) and self.player_sprite.center_y == 393.5):
+            self.genera_texto("cuadrositiocerrado.png")
+        if (self.current_room == 0 and (self.player_sprite.center_x >= 73 and self.player_sprite.center_x <= 97) and self.player_sprite.center_y == 585.5):
+            self.genera_texto("cuadrositiocerrado.png")
 
         #Sistema de texto dinamico para combates fakemon
         if (self.current_room == 2):
